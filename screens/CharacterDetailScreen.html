@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Character Details</title>
+    <style>
+      /* Define styles for the page */
+      body {
+        background-color: #f5f5f5;
+        font-family: Arial, sans-serif;
+        margin: 0;
+      }
+      
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      
+      .character-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: #fff;
+        border-radius: 10px;
+        padding: 20px;
+        margin-top: 20px;
+      }
+      
+      .character-image {
+        width: 150px;
+        height: 150px;
+        border-radius: 75px;
+        margin-top: 20px;
+      }
+      
+      .character-name {
+        font-size: 25px;
+        font-weight: bold;
+        margin-top: 10px;
+      }
+      
+      .star-image {
+        width: 144px;
+        height: 28px;
+        margin-top: 10px;
+      }
+      
+      .details-container {
+        display: flex;
+        flex-direction: column;
+        margin-top: 20px;
+      }
+      
+      .detail {
+        display: flex;
+        flex-direction: row;
+        margin-bottom: 10px;
+      }
+      
+      .detail-label {
+        font-weight: bold;
+        width: 100px;
+      }
+      
+      .detail-value {
+        flex: 1;
+      }
+      
+      .go-back-link {
+        display: block;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="character-container">
+        <img src="" class="character-image" alt="character image">
+        <h1 class="character-name"></h1>
+        <img src="" class="star-image" alt="star rating">
+      </div>
+      
+      <div class="details-container">
+        <div class="detail">
+          <span class="detail-label">Birthday:</span>
+          <span class="detail-value"></span>
+        </div>
+        <div class="detail">
+          <span class="detail-label">Affiliation:</span>
+          <span class="detail-value"></span>
+        </div>
+        <div class="detail">
+          <span class="detail-label">Role:</span>
+          <span class="detail-value"></span>
+        </div>
+        <div class="detail">
+          <span class="detail-label">Weapon:</span>
+          <span class="detail-value"></span>
+        </div>
+        <div class="detail">
+          <span class="detail-label">Constellation:</span>
+          <span class="detail-value"></span>
+        </div>
+        <div class="detail">
+          <span class="detail-label">Title:</span>
+          <span class="detail-value"></span>
+        </div>
+        <div class="detail">
+          <span class="detail-label">Region:</span>
+          <span class="detail-value"></span>
+        </div>
+        <div class="detail">
+          <span class="detail-label">Element:</span>
+          <span class="detail-value"></span>
+        </div>
+      </div>
+      
+      <a href="/" class="go-back-link">&lt; Go back to home page</a>
+    </div>
+    
+    <script>
+      // Load the character data from the JSON file
+      fetch('characters.json')
+        .then(response => response.json())
+        .then(characters => {
+          // Get the character name from the query string
+          const urlParams = new URLSearchParams(window.location.search);
+          const characterName = urlParams.get('name');
+          
+          // Find the character data that matches the name
+          const character = characters.find(c => c.name === characterName);
+          
+          // Update the page with the character data
+          document.querySelector('.character-image').src = `${characterName}.jpg`;
+          document.querySelector('.character-name').textContent = character.name;
+          document.querySelector('.star-image').src = `${character.star}_stars.png`;
+          document.querySelector('.detail-value:nth-of-type(1)').textContent = character.birthday;
+          document.querySelector('.detail-value:nth-of-type(2)').textContent = character.affiliation;
+          document.querySelector('.detail-value:nth-of-type(3)').textContent = character.role;
+          document.querySelector('.detail-value:nth-of-type(4)').textContent = character.weapon;
+          document.querySelector('.detail-value:nth-of-type(5)').textContent = character.constellation;
+          document.querySelector('.detail-value:nth-of-type(6)').textContent = character.title;
+          document.querySelector('.detail-value:nth-of-type(7)').textContent = character.region;
+          document.querySelector('.detail-value:nth-of-type(8)').textContent = character.element;
+        })
+        .catch(error => {
+          console.error('Error loading character data:', error);
+        });
+    </script>
+  </body>
+</html>
