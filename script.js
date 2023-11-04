@@ -20,5 +20,5 @@ for (let i = 0; i < navItems.length; i++) {
 }
 
 function openWebsite(url) {
-    window.location.href = url;
-  }
+  window.open(url, '_blank');
+}
