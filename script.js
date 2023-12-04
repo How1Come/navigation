@@ -18,3 +18,7 @@ function handleNavItemClick(event) {
 for (let i = 0; i < navItems.length; i++) {
   navItems[i].addEventListener('click', handleNavItemClick);
 }
+
+function openWebsite(url) {
+  window.open(url, '_blank');
+}
