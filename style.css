@@ -7,8 +7,12 @@
   }
 }
 
-nav li {
+body {
   animation: fade-in 0.5s ease-in-out;
+}
+
+nav li {
+  animation: none; /* Remove the animation from the navigation items */
 }
 
 .container {
@@ -16,6 +20,7 @@ nav li {
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
+  animation: fade-in 0.5s ease-in-out; /* Apply the fade-in animation to the container */
 }
 
 .box {
@@ -27,6 +32,7 @@ nav li {
   background-color: #f0f0f0;
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  animation: fade-in 0.5s ease-in-out; /* Apply the fade-in animation to the boxes */
 }
 
 .box a {
