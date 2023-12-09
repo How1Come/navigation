@@ -15,6 +15,35 @@ nav li {
   animation: none; /* Remove the animation from the navigation items */
 }
 
+/* Style the navigation menu */
+nav {
+  background-color: #333;
+  padding: 10px;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+}
+
+nav ul li {
+  margin-right: 10px;
+}
+
+nav ul li a {
+  color: #fff;
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+nav ul li a:hover {
+  background-color: #555;
+}
+
+/* Style the page header */
 h1 {
   font-size: 32px;
   text-align: center;
