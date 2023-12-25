@@ -24,18 +24,15 @@ function openWebsite(url) {
 }
 
 document.getElementById('contactBtn').addEventListener('click', function() {
-  // 顯示彈出窗口
   document.getElementById('popup').style.display = 'block';
 });
 
 document.getElementById('submitBtn').addEventListener('click', function() {
-  // 檢查密碼是否正確
   var password = document.getElementById('passwordInput').value;
   if (password === '277353') {
-    // 密碼正確，更改所有圖像的來源
     var images = document.getElementsByTagName('img');
     for (var i = 0; i < images.length; i++) {
-      images[i].src = 's' + (i + 1) + '.jpg';
+      images[i].src = 'simages/s' + (i + 1) + '.jpg';
     }
   }
 });
