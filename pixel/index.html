@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        canvas {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+
+    <script>
+        var canvas = document.getElementById("canvas");
+        var ctx = canvas.getContext("2d");
+
+        // Set canvas size
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Number of pixels
+        var numPixels = 3000;
+
+        // Pixel size in pixels
+        var pixelSize = 5;
+
+        // Maximum distance a pixel can be from the cursor
+        var maxDistance = 50;
+
+        // Delay in milliseconds before the pixels reform
+        var reformDelay = 0;
+
+        var pixels = [];
+
+        function createPixels() {
+            for (var i = 0; i < numPixels; i++) {
+                var x = Math.random() * canvas.width;
+                var y = Math.random() * canvas.height;
+
+                var pixel = {
+                    x: x,
+                    y: y,
+                    dx: Math.random() * 2 - 1,
+                    dy: Math.random() * 2 - 1,
+                    color: getRandomColor()
+                };
+                pixels.push(pixel);
+            }
+        }
+
+        function updatePixels(mouseX, mouseY) {
+            for (var i = 0; i < pixels.length; i++) {
+                var pixel = pixels[i];
+                var distance = Math.sqrt(Math.pow(mouseX - pixel.x, 2) + Math.pow(mouseY - pixel.y, 2));
+
+                if (distance <= maxDistance) {
+                    var angle = Math.atan2(pixel.y - mouseY, pixel.x - mouseX);
+                    var newX = pixel.x + Math.cos(angle) * (maxDistance - distance);
+                    var newY = pixel.y + Math.sin(angle) * (maxDistance - distance);
+
+                    pixel.x = newX;
+                    pixel.y = newY;
+                }
+
+                pixel.x += pixel.dx;
+                pixel.y += pixel.dy;
+
+                // Bounce off the walls
+                if (pixel.x <= 0 || pixel.x >= canvas.width) {
+                    pixel.dx *= -1;
+                }
+                if (pixel.y <= 0 || pixel.y >= canvas.height) {
+                    pixel.dy *= -1;
+                }
+            }
+        }
+
+        function drawPixels() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (var i = 0; i < pixels.length; i++) {
+                var pixel = pixels[i];
+                ctx.fillStyle = pixel.color;
+                ctx.fillRect(pixel.x, pixel.y, pixelSize, pixelSize);
+            }
+        }
+
+        function getRandomColor() {
+            var letters = "0123456789ABCDEF";
+            var color = "#";
+            for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        createPixels();
+
+        canvas.addEventListener("mousemove", function(event) {
+            updatePixels(event.clientX, event.clientY);
+        });
+
+        setInterval(function() {
+            updatePixels(); // Update with the center of the canvas as the cursor position
+            drawPixels();
+        }, 1000 / 60); // Update and redraw at 60 FPS
+
+        setTimeout(function() {
+            pixels = [];
+            createPixels();
+        }, reformDelay);
+    </script>
+</body>
+</html>

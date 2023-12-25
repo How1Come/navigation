@@ -1,0 +1,13 @@
+body {
+    background-color: black;
+    overflow: hidden;
+    margin: 0;
+}
+
+#image-container {
+    position: relative;
+    width: 800px;
+    height: 600px;
+    margin: 100px auto;
+    overflow: hidden;
+}
