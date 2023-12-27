@@ -53,7 +53,7 @@ document.querySelectorAll('#sidebar a').forEach(link => {
     });
 
     // If the "全部" category is clicked, show all boxes
-    if (category === '全部') {
+    if (category == '全部') {
       document.querySelectorAll('.box').forEach(box => {
         box.style.display = 'block';
       });
