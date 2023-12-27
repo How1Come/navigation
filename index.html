@@ -106,7 +106,6 @@
       </a>
     </div>
 
-    <button id="contactBtn">建议别按</button>
     <div id="popup" style="display: none;">
       <input type="password" id="passwordInput">
       <button id="submitBtn">Submit</button>
@@ -114,5 +113,10 @@
   </div>
 
   <script src="script.js"></script>
+  <script>
+    document.getElementById("contactBtn").addEventListener("click", function() {
+      document.getElementById("submitBtn").click();
+    });
+  </script>
 </body>
 </html>
