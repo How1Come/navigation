@@ -37,9 +37,12 @@ document.getElementById('submitBtn').addEventListener('click', function() {
   }
 });
 
-document.querySelectorAll('#sidebar a').forEach(link => {
-  link.addEventListener('click', function(e) {
+document.querySelectorAll('#sidebar a, .box').forEach(element => {
+  element.addEventListener('click', function(e) {
     e.preventDefault();
+    
+    // Hide the password popup
+    document.getElementById('popup').style.display = 'none';
 
     // Get the category from the clicked link
     var category = this.textContent;
