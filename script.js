@@ -1,6 +1,17 @@
 const navList = document.getElementById('navList');
 const navItems = navList.getElementsByTagName('li');
 
+window.onload = function() {
+  var password = prompt("Please enter your password:", "");
+
+  if (password === "114514") {
+    document.querySelector('.container').style.display = 'block';
+  } else {
+    alert("Incorrect password. You will not be able to see the content.");
+    document.querySelector('.container').style.display = 'none';
+  }
+}
+
 // Add a class to the clicked navigation item to highlight it
 function handleNavItemClick(event) {
   const clickedItem = event.target;
