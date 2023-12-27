@@ -5,7 +5,7 @@ window.onload = function() {
   var password = prompt("Please enter your password:", "");
 
   if (password === "114514") {
-    document.querySelector('.container').style.display = 'block';
+    document.querySelector('.container').style.display = 'flex'; // Change this line
   } else {
     alert("Incorrect password. You will not be able to see the content.");
     document.querySelector('.container').style.display = 'none';
