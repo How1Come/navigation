@@ -37,10 +37,10 @@ document.getElementById('submitBtn').addEventListener('click', function() {
   }
 });
 
-document.querySelectorAll('#sidebar a, .box').forEach(element => {
-  element.addEventListener('click', function(e) {
+document.querySelectorAll('#sidebar a').forEach(link => {
+  link.addEventListener('click', function(e) {
     e.preventDefault();
-    
+
     // Hide the password popup
     document.getElementById('popup').style.display = 'none';
 
@@ -52,9 +52,16 @@ document.querySelectorAll('#sidebar a, .box').forEach(element => {
       box.style.display = 'none';
     });
 
-    // Show boxes in the selected category
-    document.querySelectorAll('.box.' + category).forEach(box => {
-      box.style.display = 'block';
-    });
+    // If the "全部" category is clicked, show all boxes
+    if (category === '全部') {
+      document.querySelectorAll('.box').forEach(box => {
+        box.style.display = 'block';
+      });
+    } else {
+      // Otherwise, show boxes in the selected category
+      document.querySelectorAll('.box.' + category).forEach(box => {
+        box.style.display = 'block';
+      });
+    }
   });
 });
