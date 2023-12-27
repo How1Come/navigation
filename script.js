@@ -36,3 +36,22 @@ document.getElementById('submitBtn').addEventListener('click', function() {
     }
   }
 });
+
+document.querySelectorAll('#sidebar a').forEach(link => {
+  link.addEventListener('click', function(e) {
+    e.preventDefault();
+
+    // Get the category from the clicked link
+    var category = this.textContent;
+
+    // Hide all boxes
+    document.querySelectorAll('.box').forEach(box => {
+      box.style.display = 'none';
+    });
+
+    // Show boxes in the selected category
+    document.querySelectorAll('.box.' + category).forEach(box => {
+      box.style.display = 'block';
+    });
+  });
+});
