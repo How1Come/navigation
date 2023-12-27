@@ -55,11 +55,14 @@ h1 {
   position: fixed;
   width: 0;
   transition: width 0.5s;
+  overflow: hidden; /* Add this line */
 }
 
 #sidebarIcon {
   position: fixed;
   cursor: pointer;
+  font-size: 30px; /* Adjust the size of the icon */
+  padding: 10px; /* Add some space around the icon */
 }
 
 #sidebar ul {
