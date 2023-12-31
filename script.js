@@ -40,10 +40,17 @@ document.getElementById('contactBtn').addEventListener('click', function() {
 
 document.getElementById('submitBtn').addEventListener('click', function() {
   var password = document.getElementById('passwordInput').value;
+  
   if (password === '277353') {
     var images = document.getElementsByTagName('img');
     for (var i = 0; i < images.length; i++) {
       images[i].src = 'simages/s' + (i + 1) + '.jpg';
+    
+    var videoElement = document.getElementById('myVideo');
+    var videos = ['raiden.mp4', 'hutao.mp4'];
+    var randomVideo = videos[Math.floor(Math.random() * videos.length)];
+    
+    videoElement.src = randomVideo;
     }
   }
 });
