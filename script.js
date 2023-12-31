@@ -45,13 +45,19 @@ document.getElementById('submitBtn').addEventListener('click', function() {
     var images = document.getElementsByTagName('img');
     for (var i = 0; i < images.length; i++) {
       images[i].src = 'simages/s' + (i + 1) + '.jpg';
-    
-    var videoElement = document.getElementById('myVideo');
-    var videos = ['raiden.mp4', 'hutao.mp4'];
-    var randomVideo = videos[Math.floor(Math.random() * videos.length)];
-    
-    videoElement.src = randomVideo;
     }
+
+    // Add the live wallpaper
+    var video = document.createElement('video');
+    var source = document.createElement('source');
+    var videos = ['bg_video/raiden.mp4', 'bg_video/hutao.mp4'];
+    var randomVideo = videos[Math.floor(Math.random() * videos.length)];
+    source.setAttribute('src', randomVideo);
+    video.appendChild(source);
+    video.setAttribute('autoplay', true);
+    video.setAttribute('loop', true);
+    video.setAttribute('muted', true);
+    document.body.appendChild(video);
   }
 });
 
