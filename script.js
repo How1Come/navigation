@@ -57,6 +57,14 @@ document.getElementById('submitBtn').addEventListener('click', function() {
     video.setAttribute('autoplay', true);
     video.setAttribute('loop', true);
     video.setAttribute('muted', true);
+    video.style.position = 'fixed';  // Add this line
+    video.style.right = '0';  // Add this line
+    video.style.bottom = '0';  // Add this line
+    video.style.minWidth = '100%';  // Add this line
+    video.style.minHeight = '100%';  // Add this line
+    video.style.width = 'auto';  // Add this line
+    video.style.height = 'auto';  // Add this line
+    video.style.zIndex = '-1';  // Add this line
     document.body.appendChild(video);
   }
 });
