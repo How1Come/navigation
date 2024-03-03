@@ -3,6 +3,11 @@
 
 <head>
     <title>Breakout Game</title>
+    <style>
+        canvas {
+            background: #ffffff;
+        }
+    </style>
     <script src="https://cdn.jsdelivr.net/pyjslib/1.1.1/pyjslib.min.js"></script>
 </head>
 
@@ -18,7 +23,6 @@
             pgjs.display.set_caption("Breakout Game");
             var clock = pgjs.time.Clock();
 
-            var WHITE = [255, 255, 255];
             var BLUE = [0, 0, 255];
             var RED = [255, 0, 0];
 
@@ -88,7 +92,7 @@
                     running = false;
                 }
 
-                screen.fill(WHITE);
+                screen.clear();
                 pgjs.draw.rect(screen, BLUE, paddle_rect);
                 pgjs.draw.circle(screen, RED, [ball_x, ball_y], ball_radius);
                 for (var i = 0; i < bricks.length; i++) {
