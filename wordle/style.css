@@ -1,9 +1,20 @@
+body {
+    background-color: #f8f9fa;
+    font-family: Arial, sans-serif;
+}
+
 .wordle-container {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     margin-top: 100px;
+}
+
+h1 {
+    color: #6c757d;
+    font-size: 30px;
+    margin-bottom: 30px;
 }
 
 .word-guess {
@@ -18,10 +29,25 @@
     height: 30px;
     text-align: center;
     margin-right: 5px;
+    font-size: 18px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
 }
 
 .submit-button {
     margin-top: 10px;
+    padding: 10px 20px;
+    font-size: 18px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submit-button:hover {
+    background-color: #0056b3;
 }
 
 .attempts {
@@ -30,4 +56,10 @@
 
 .result {
     margin-top: 20px;
+}
+
+.resultMessage {
+    font-size: 18px;
+    font-weight: bold;
+    color: #6c757d;
 }
