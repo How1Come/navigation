@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Wordle Game</title>
+    <style>
+        .wordle-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            margin-top: 100px;
+        }
+
+        .word-guess {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .letter-input {
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            margin-right: 5px;
+        }
+
+        .submit-button {
+            margin-top: 10px;
+        }
+
+        .attempts {
+            margin-top: 20px;
+        }
+
+        .result {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="wordle-container">
+        <h1>Welcome to Wordle!</h1>
+        <div class="word-guess">
+            <input type="text" class="letter-input" maxlength="1">
+            <input type="text" class="letter-input" maxlength="1">
+            <input type="text" class="letter-input" maxlength="1">
+            <input type="text" class="letter-input" maxlength="1">
+            <input type="text" class="letter-input" maxlength="1">
+        </div>
+        <button class="submit-button" onclick="checkGuess()">Submit</button>
+        <div class="attempts">
+            <p>Attempts: <span id="attemptCount">0</span></p>
+        </div>
+        <div class="result">
+            <p id="resultMessage"></p>
+        </div>
+    </div>
+
+    <script>
+        // Word list
+        const words = ["apple", "banana", "cherry", "grape", "melon", "orange"];
+
+        // Generate a random word
+        const randomWord = words[Math.floor(Math.random() * words.length)];
+
+        // Variables to track the game state
+        let attempts = 0;
+        let correctLetters = 0;
+
+        // Function to check the player's guess
+        function checkGuess() {
+            const guessInputs = document.getElementsByClassName("letter-input");
+
+            let guess = "";
+            for (let i = 0; i < guessInputs.length; i++) {
+                guess += guessInputs[i].value.toLowerCase();
+            }
+
+            attempts++;
+            document.getElementById("attemptCount").innerText = attempts;
+
+            if (guess.length !== 5) {
+                document.getElementById("resultMessage").innerText = "Please enter a 5-letter word.";
+                return;
+            }
+
+            correctLetters = 0;
+            for (let i = 0; i < randomWord.length; i++) {
+                if (guess.includes(randomWord[i])) {
+                    correctLetters++;
+                }
+            }
+
+            if (correctLetters === 5) {
+                document.getElementById("resultMessage").innerText = "Congratulations! You guessed the word!";
+            } else {
+                document.getElementById("resultMessage").innerText = `Correct letters: ${correctLetters}`;
+            }
+        }
+    </script>
+</body>
+</html>
