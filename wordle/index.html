@@ -1,28 +1,22 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Wordle Game</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wordle</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="wordle-container">
-        <h1>Welcome to Wordle!</h1>
-        <div class="word-guess">
-            <input type="text" class="letter-input" maxlength="1">
-            <input type="text" class="letter-input" maxlength="1">
-            <input type="text" class="letter-input" maxlength="1">
-            <input type="text" class="letter-input" maxlength="1">
-            <input type="text" class="letter-input" maxlength="1">
-        </div>
-        <button class="submit-button" onclick="checkGuess()">Submit</button>
-        <div class="attempts">
-            <p>Attempts: <span id="attemptCount">0</span></p>
-        </div>
-        <div class="result">
-            <p id="resultMessage"></p>
-        </div>
+  <div id="game-container">
+    <h1>Wordle</h1>
+    <div id="game-board">
+      <!-- This is where the game board will be rendered -->
     </div>
+    <div id="keyboard">
+      <!-- This is where the on-screen keyboard will be rendered -->
+    </div>
+  </div>
 
-    <script src="script.js"></script>
+  <script src="wordle.js"></script>
 </body>
 </html>

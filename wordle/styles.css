@@ -1,0 +1,67 @@
+/* General styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #121213;
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+  
+  #game-container {
+    text-align: center;
+  }
+  
+  /* Game board styles */
+  #game-board {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 5px;
+    margin-bottom: 20px;
+  }
+  
+  .tile {
+    width: 60px;
+    height: 60px;
+    border: 2px solid #3a3a3c;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    font-weight: bold;
+    border-radius: 5px;
+  }
+  
+  /* Keyboard styles */
+  #keyboard {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 5px;
+  }
+  
+  .key {
+    background-color: #818384;
+    color: #ffffff;
+    border: none;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  /* Tile colors */
+  .correct {
+    background-color: #538d4e;
+  }
+  
+  .present {
+    background-color: #b59f3b;
+  }
+  
+  .absent {
+    background-color: #3a3a3c;
+  }
