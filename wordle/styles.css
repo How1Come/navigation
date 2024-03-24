@@ -30,6 +30,11 @@ body {
   border-radius: 5px;
 }
 
+#keyboard-container {
+  display: flex;
+  justify-content: center;
+}
+
 #keyboard {
   display: grid;
   grid-template-columns: repeat(10, 1fr);

@@ -2,17 +2,21 @@ const wordList = ["apple", "banana", "cherry", /* ... */];
 const targetWord = wordList[Math.floor(Math.random() * wordList.length)];
 let currentRow = 0;
 let currentCol = 0;
+const boardTiles = [];
 
 const board = document.getElementById("board");
 const keyboard = document.getElementById("keyboard");
 
 function renderBoard() {
   for (let row = 0; row < 6; row++) {
+    const rowTiles = [];
     for (let col = 0; col < 5; col++) {
       const tile = document.createElement("div");
       tile.classList.add("tile");
+      rowTiles.push(tile);
       board.appendChild(tile);
     }
+    boardTiles.push(rowTiles);
   }
 }
 
@@ -34,30 +38,35 @@ function renderKeyboard() {
 
 function handleKeyPress(key) {
   if (key === "⌫") {
-    currentCol = Math.max(currentCol - 1, 0);
+    if (currentCol > 0) {
+      currentCol--;
+      boardTiles[currentRow][currentCol].textContent = "";
+    }
   } else if (key === "ENTER") {
-    currentRow++;
-    currentCol = 0;
+    if (currentCol === 5) {
+      currentRow++;
+      currentCol = 0;
+    }
   } else {
-    updateBoard(key);
-    currentCol++;
+    if (currentCol < 5) {
+      boardTiles[currentRow][currentCol].textContent = key;
+      currentCol++;
+    }
+  }
+
+  if (currentRow === 6 && currentCol === 5) {
+    // Game over
+    console.log("Game over!");
   }
 }
 
-function updateBoard(guess) {
-  const tiles = board.querySelectorAll(".tile");
-
+function updateBoard() {
   for (let row = 0; row < 6; row++) {
     for (let col = 0; col < 5; col++) {
-      const index = (row * 5) + col;
-      const tile = tiles[index];
-
-      if (row === currentRow && col === currentCol) {
-        tile.textContent = guess;
-      } else if (row < currentRow) {
-        const letter = tile.textContent;
-        const color = getColor(letter, col, row);
-        tile.classList.add(color);
+      const letter = boardTiles[row][col].textContent;
+      const color = getColor(letter, col, row);
+      if (color) {
+        boardTiles[row][col].classList.add(color);
       }
     }
   }
