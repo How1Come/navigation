@@ -6,6 +6,7 @@ const boardTiles = [];
 
 const board = document.getElementById("board");
 const keyboard = document.getElementById("keyboard");
+const messageContainer = document.getElementById("message");
 
 function renderBoard() {
   for (let row = 0; row < 6; row++) {
@@ -44,8 +45,15 @@ function handleKeyPress(key) {
     }
   } else if (key === "ENTER") {
     if (currentCol === 5) {
-      currentRow++;
-      currentCol = 0;
+      const guess = boardTiles[currentRow].map((tile) => tile.textContent.toLowerCase()).join("");
+      if (wordList.includes(guess)) {
+        updateBoard();
+        currentRow++;
+        currentCol = 0;
+        checkGameStatus();
+      } else {
+        displayMessage("Not a valid word");
+      }
     }
   } else {
     if (currentCol < 5) {
@@ -53,21 +61,14 @@ function handleKeyPress(key) {
       currentCol++;
     }
   }
-
-  if (currentRow === 6 && currentCol === 5) {
-    // Game over
-    console.log("Game over!");
-  }
 }
 
 function updateBoard() {
-  for (let row = 0; row < 6; row++) {
+  for (let row = 0; row < currentRow; row++) {
     for (let col = 0; col < 5; col++) {
-      const letter = boardTiles[row][col].textContent;
+      const letter = boardTiles[row][col].textContent.toLowerCase();
       const color = getColor(letter, col, row);
-      if (color) {
-        boardTiles[row][col].classList.add(color);
-      }
+      boardTiles[row][col].classList.add(color);
     }
   }
 }
@@ -80,6 +81,32 @@ function getColor(letter, col, row) {
   } else {
     return "absent";
   }
+}
+
+function checkGameStatus() {
+  const currentGuess = boardTiles[currentRow - 1].map((tile) => tile.textContent.toLowerCase()).join("");
+  if (currentGuess === targetWord) {
+    displayMessage("Congratulations! You guessed the word correctly!");
+  } else if (currentRow === 6) {
+    displayMessage(`Game over! The word was "${targetWord}".`);
+  }
+}
+
+function displayMessage(message) {
+  messageContainer.textContent = message;
+}
+
+function resetGame() {
+  currentRow = 0;
+  currentCol = 0;
+  boardTiles.forEach((row) => {
+    row.forEach((tile) => {
+      tile.textContent = "";
+      tile.classList.remove("correct", "present", "absent");
+    });
+  });
+  messageContainer.textContent = "";
+  targetWord = wordList[Math.floor(Math.random() * wordList.length)];
 }
 
 renderBoard();

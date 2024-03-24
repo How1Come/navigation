@@ -64,3 +64,8 @@ body {
 .absent {
   background-color: #3a3a3c;
 }
+
+#message {
+  margin-top: 20px;
+  font-size: 1.2rem;
+}
