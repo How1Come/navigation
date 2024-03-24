@@ -1,6 +1,5 @@
-const wordList = ["apple", "banana", "cherry", /* ... */];
+const wordList = ["apple", "berry", "catch", /* ... */]; // List of 5-letter words
 const targetWord = wordList[Math.floor(Math.random() * wordList.length)];
-const wordLength = targetWord.length;
 let currentRow = 0;
 let currentCol = 0;
 const boardTiles = [];
@@ -10,11 +9,9 @@ const keyboard = document.getElementById("keyboard");
 const messageContainer = document.getElementById("message");
 
 function renderBoard() {
-  board.style.setProperty("--board-columns", wordLength);
-
   for (let row = 0; row < 6; row++) {
     const rowTiles = [];
-    for (let col = 0; col < wordLength; col++) {
+    for (let col = 0; col < 5; col++) {
       const tile = document.createElement("div");
       tile.classList.add("tile");
       rowTiles.push(tile);
@@ -47,7 +44,7 @@ function handleKeyPress(key) {
       boardTiles[currentRow][currentCol].textContent = "";
     }
   } else if (key === "ENTER") {
-    if (currentCol === wordLength) {
+    if (currentCol === 5) {
       const guess = boardTiles[currentRow].map((tile) => tile.textContent.toLowerCase()).join("");
       if (wordList.includes(guess)) {
         updateBoard();
@@ -59,7 +56,7 @@ function handleKeyPress(key) {
       }
     }
   } else {
-    if (currentCol < wordLength) {
+    if (currentCol < 5) {
       boardTiles[currentRow][currentCol].textContent = key;
       currentCol++;
     }
@@ -68,7 +65,7 @@ function handleKeyPress(key) {
 
 function updateBoard() {
   for (let row = 0; row < currentRow; row++) {
-    for (let col = 0; col < wordLength; col++) {
+    for (let col = 0; col < 5; col++) {
       const letter = boardTiles[row][col].textContent.toLowerCase();
       const color = getColor(letter, col, row);
       boardTiles[row][col].classList.add(color);
@@ -110,8 +107,6 @@ function resetGame() {
   });
   messageContainer.textContent = "";
   targetWord = wordList[Math.floor(Math.random() * wordList.length)];
-  wordLength = targetWord.length;
-  renderBoard();
 }
 
 renderBoard();
