@@ -68,6 +68,7 @@ function updateBoard() {
     for (let col = 0; col < 5; col++) {
       const letter = boardTiles[row][col].textContent.toLowerCase();
       const color = getColor(letter, col, row);
+      boardTiles[row][col].classList.remove("correct", "present", "absent");
       boardTiles[row][col].classList.add(color);
     }
   }
