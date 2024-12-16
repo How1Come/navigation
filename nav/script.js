@@ -1,17 +1,6 @@
 const navList = document.getElementById('navList');
 const navItems = navList.getElementsByTagName('li');
 
-window.onload = function() {
-  var password = prompt("Please enter your password:", "");
-
-  if (password === "114514") {
-    document.querySelector('.container').style.display = 'flex'; // Change this line
-  } else {
-    alert("Incorrect password. You will not be able to see the content.");
-    document.querySelector('.container').style.display = 'none';
-  }
-}
-
 // Add a class to the clicked navigation item to highlight it
 function handleNavItemClick(event) {
   const clickedItem = event.target;
@@ -129,7 +118,7 @@ document.getElementById('addLinkBtn').addEventListener('click', function() {
     const newBox = document.createElement('div');
     newBox.className = 'box 工具';
     newBox.innerHTML = `
-      <a href="${newLink}" target="_blank">
+      <a href="https://${newLink}" target="_blank">
         <img src="images/default.jpg" alt="${newLink}">
         <h2>${newLink}</h2>
         <p>${newDescription}</p>
@@ -174,6 +163,15 @@ function loadContent() {
 }
 
 window.onload = function() {
+  var password = prompt("Please enter your password:", "");
+
+  if (password === "114514") {
+    document.querySelector('.container').style.display = 'flex';
+  } else {
+    alert("Incorrect password. You will not be able to see the content.");
+    document.querySelector('.container').style.display = 'none';
+  }
+
   loadContent();
   document.getElementById('loginForm').style.display = 'block';
 };
