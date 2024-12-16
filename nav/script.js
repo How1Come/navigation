@@ -1,16 +1,16 @@
 const navList = document.getElementById('navList');
 const navItems = navList.getElementsByTagName('li');
 
-// window.onload = function() {
-//   var password = prompt("Please enter your password:", "");
+window.onload = function() {
+  var password = prompt("Please enter your password:", "");
 
-//   if (password === "114514") {
-//     document.querySelector('.container').style.display = 'flex'; // Change this line
-//   } else {
-//     alert("Incorrect password. You will not be able to see the content.");
-//     document.querySelector('.container').style.display = 'none';
-//   }
-// }
+  if (password === "114514") {
+    document.querySelector('.container').style.display = 'flex'; // Change this line
+  } else {
+    alert("Incorrect password. You will not be able to see the content.");
+    document.querySelector('.container').style.display = 'none';
+  }
+}
 
 // Add a class to the clicked navigation item to highlight it
 function handleNavItemClick(event) {
@@ -106,3 +106,74 @@ document.getElementById('sidebarIcon').addEventListener('click', function() {
     sidebar.style.width = '0px';
   }
 });
+
+// Login functionality
+document.getElementById('loginBtn').addEventListener('click', function() {
+  const username = document.getElementById('username').value;
+  const password = document.getElementById('password').value;
+
+  if (username === 'admin' && password === 'howcome') {
+    document.getElementById('adminPanel').style.display = 'block';
+    document.getElementById('loginForm').style.display = 'none';
+  } else {
+    alert('Incorrect username or password');
+  }
+});
+
+// Add link functionality
+document.getElementById('addLinkBtn').addEventListener('click', function() {
+  const newLink = document.getElementById('newLink').value;
+  const newDescription = document.getElementById('newDescription').value;
+
+  if (newLink && newDescription) {
+    const newBox = document.createElement('div');
+    newBox.className = 'box 工具';
+    newBox.innerHTML = `
+      <a href="${newLink}" target="_blank">
+        <img src="images/default.jpg" alt="${newLink}">
+        <h2>${newLink}</h2>
+        <p>${newDescription}</p>
+      </a>
+    `;
+    document.querySelector('.container').appendChild(newBox);
+    saveContent();
+  } else {
+    alert('Please enter both link and description');
+  }
+});
+
+// Remove link functionality
+document.getElementById('removeLinkBtn').addEventListener('click', function() {
+  const newLink = document.getElementById('newLink').value;
+
+  if (newLink) {
+    const boxes = document.querySelectorAll('.box');
+    boxes.forEach(box => {
+      if (box.querySelector('a').href === newLink) {
+        box.remove();
+      }
+    });
+    saveContent();
+  } else {
+    alert('Please enter the link to remove');
+  }
+});
+
+// Save content to localStorage
+function saveContent() {
+  const container = document.querySelector('.container');
+  localStorage.setItem('content', container.innerHTML);
+}
+
+// Load content from localStorage
+function loadContent() {
+  const savedContent = localStorage.getItem('content');
+  if (savedContent) {
+    document.querySelector('.container').innerHTML = savedContent;
+  }
+}
+
+window.onload = function() {
+  loadContent();
+  document.getElementById('loginForm').style.display = 'block';
+};
