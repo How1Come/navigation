@@ -104,6 +104,9 @@ document.getElementById('loginBtn').addEventListener('click', function() {
   if (username === 'admin' && password === 'howcome') {
     document.getElementById('adminPanel').style.display = 'block';
     document.getElementById('loginForm').style.display = 'none';
+    document.querySelectorAll('.box.warn').forEach(box => {
+      box.style.display = 'flex';
+    });
   } else {
     alert('Incorrect username or password');
   }
