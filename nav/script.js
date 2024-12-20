@@ -141,6 +141,7 @@ document.getElementById('removeLinkBtn').addEventListener('click', function() {
   if (newLink) {
     const boxes = document.querySelectorAll('.box');
     boxes.forEach(box => {
+      console.log(box.querySelector('a').href.slice(8));
       if (box.querySelector('a').href.slice(8) === newLink) {
         box.remove();
       }
