@@ -1,179 +1,664 @@
+/* 基础样式重置 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* 动画效果 */
 @keyframes fade-in {
   0% {
     opacity: 0;
+    transform: translateY(10px);
   }
   100% {
     opacity: 1;
+    transform: translateY(0);
   }
 }
 
+/* 基础样式 */
 body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #f8f9fa;
+  min-height: 100vh;
   animation: fade-in 0.5s ease-in-out;
 }
 
-nav li {
-  animation: none; /* Remove the animation from the navigation items */
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.3s ease;
 }
 
-/* Style the navigation menu */
-nav {
-  background-color: #333;
-  padding: 10px;
+ul {
+  list-style: none;
+}
+
+/* 头部样式 */
+header {
+  background-color: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 1rem 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
 }
 
 nav ul {
-  list-style: none;
   display: flex;
-  justify-content: center;
-}
-
-nav ul li {
-  margin-right: 10px;
+  gap: 1.5rem;
 }
 
 nav ul li a {
-  color: #fff;
-  text-decoration: none;
-  padding: 8px 12px;
+  color: #555;
+  font-weight: 500;
+  padding: 0.5rem 0.75rem;
   border-radius: 4px;
-  transition: background-color 0.3s ease;
-}
-
-nav ul li a:hover {
-  background-color: #555;
-}
-
-/* Style the page header */
-h1 {
-  font-size: 32px;
-  text-align: center;
-  margin: 40px 0;
-  color: #333;
-}
-
-#sidebar {
-  position: fixed;
-  width: 0;
-  transition: width 0.5s;
-  overflow: hidden;
-  margin-top: 50px; /* Adjust this value as needed */
-}
-
-#sidebarIcon {
-  position: fixed;
-  cursor: pointer;
-  font-size: 30px; /* Adjust the size of the icon */
-  padding: 10px; /* Add some space around the icon */
-}
-
-#sidebar ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-#sidebar ul li a {
-  display: block;
-  color: #333;
-  text-decoration: none;
-  padding: 10px 0;
-}
-
-.container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: #fff;
-}
-
-.container {
   display: flex;
-  justify-content: center;
   align-items: center;
-  flex-wrap: wrap;
-  animation: fade-in 0.5s ease-in-out; /* Apply the fade-in animation to the container */
+  gap: 0.5rem;
 }
 
-.box {
-  width: 200px;
-  height: 250px;
-  margin: 20px;
-  padding: 10px;
+nav ul li a:hover,
+nav ul li a.active {
+  color: #4a6cf7;
+  background-color: rgba(74, 108, 247, 0.1);
+}
+
+nav ul li a i {
+  font-size: 0.9rem;
+}
+
+.menu-toggle {
+  display: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: #555;
+}
+
+/* 主内容区域 */
+.main-content {
+  display: flex;
+  min-height: calc(100vh - 70px);
+}
+
+/* 侧边栏样式 */
+.sidebar {
+  width: 250px;
+  background-color: #fff;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+  padding: 2rem 1rem;
+  transition: all 0.3s ease;
+}
+
+.sidebar-header h3 {
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+  color: #333;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+.category-list li {
+  margin-bottom: 0.75rem;
+}
+
+.category-list li a {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  color: #555;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.category-list li a:hover,
+.category-list li a.active {
+  background-color: rgba(74, 108, 247, 0.1);
+  color: #4a6cf7;
+}
+
+.category-list li a i {
+  font-size: 1rem;
+  width: 20px;
   text-align: center;
-  background-color: #f0f0f0;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  animation: fade-in 0.5s ease-in-out; /* Apply the fade-in animation to the boxes */
+}
+
+/* 主内容区域 */
+main {
+  flex: 1;
+  padding: 2rem;
+}
+
+/* 网站卡片容器 */
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+  animation: fade-in 0.5s ease-in-out;
+}
+
+/* 网站卡片样式 */
+.box {
+  background-color: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  animation: fade-in 0.5s ease-in-out;
+  height: 100%;
+}
+
+.box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
 .box a {
-  text-decoration: none;
-  color: #333;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
-.box img {
-  width: 150px;
+.box-image {
   height: 150px;
+  overflow: hidden;
+}
+
+.box-image img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  border-radius: 50%;
-  margin-bottom: 10px;
+  transition: transform 0.5s ease;
+}
+
+.box:hover .box-image img {
+  transform: scale(1.05);
+}
+
+.box-content {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 .box h2 {
-  font-size: 18px;
-  margin-bottom: 5px;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  color: #333;
+  font-weight: 600;
 }
 
 .box p {
-  font-size: 14px;
-  color: #777;
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: auto;
 }
 
-#loginForm {
-  display: flex;
-  flex-direction: column;
+/* 模态框样式 */
+.modal {
+  display: none;
+  position: fixed; /* Ensure it's positioned relative to the viewport */
+  z-index: 1000;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%); /* Center the modal */
+  width: auto; /* Adjust width as needed, or set a max-width */
+  max-width: 500px; /* Example max-width for general modals */
+  height: auto; /* Adjust height as needed, or set a max-height */
+  background-color: rgba(
+    0,
+    0,
+    0,
+    0.5
+  ); /* Semi-transparent background for the overlay part of .modal */
+  /* display: flex; /* This is set by JS, ensure centering properties are effective */
+  justify-content: center;
   align-items: center;
-  margin: 20px;
+  padding: 0; /* Remove padding if .modal-content handles it */
+  animation: fade-in 0.3s ease-in-out;
 }
 
-#loginForm input {
-  margin: 5px;
+/* Styles for the actual content box within the modal */
+.modal .modal-content {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 2rem;
+  width: 100%; /* Takes full width of the .modal's new auto/max-width */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  position: relative;
+  animation: fade-in 0.3s ease-in-out; /* Consistent animation */
+  text-align: center; /* Assuming content should be centered */
+}
+
+/* Ensure admin panel can be wider if needed */
+.modal .admin-panel.modal-content {
+  max-width: 700px;
+}
+
+/* 自定义提示框样式 */
+.custom-prompt-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(
+    0,
+    0,
+    0,
+    0.6
+  ); /* Slightly darker overlay for prompts */
+  display: flex;
+  justify-content: center;
+  align-items: center; /* This should already center it */
+  z-index: 1001; /* Higher than general modals if they can overlap */
+  padding: 20px; /* Padding for the overlay itself */
+  animation: fade-in 0.3s ease-out;
+}
+
+.custom-prompt {
+  background-color: #fff;
+  border-radius: 12px; /* Consistent with previous attempt */
+  padding: 25px; /* Consistent with previous attempt */
+  width: 100%; /* Takes full width of its container if any, or use max-width */
+  max-width: 450px; /* Consistent with previous attempt */
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); /* Consistent with previous attempt */
+  animation: fade-in 0.3s ease-out; /* Ensure fade-in, not slide-up */
+}
+
+.custom-prompt h3 {
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.icon-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 15px;
+  max-height: 150px;
+  overflow-y: auto;
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid #eee;
   border-radius: 4px;
 }
 
-#loginForm button {
-  padding: 10px 20px;
-  border: none;
-  background-color: #333;
-  color: #fff;
+.icon-option {
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;
+  border: 1px solid #ddd;
   border-radius: 4px;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-#adminPanel {
+.icon-option:hover {
+  background-color: #f5f5f5;
+}
+
+.icon-option.selected {
+  background-color: #e6f7ff;
+  border-color: #1890ff;
+}
+
+.icon-option i {
+  margin-right: 5px;
+  font-size: 16px;
+}
+
+.prompt-buttons {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 20px;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 15px;
 }
 
-#adminPanel input {
-  margin: 5px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+/* .modal-content is now defined within the .modal block above */
+
+.admin-panel {
+  max-width: 700px;
 }
 
-#adminPanel button {
-  padding: 10px 20px;
-  border: none;
-  background-color: #333;
-  color: #fff;
-  border-radius: 4px;
+.close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.5rem;
   cursor: pointer;
+  color: #999;
+  transition: color 0.3s ease;
 }
 
+.close-btn:hover {
+  color: #333;
+}
+
+.modal h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: #333;
+  text-align: center;
+}
+
+.modal input[type="text"],
+.modal input[type="password"],
+.modal select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.modal input[type="text"]:focus,
+.modal input[type="password"]:focus,
+.modal select:focus {
+  outline: none;
+  border-color: #4a6cf7;
+  box-shadow: 0 0 0 2px rgba(74, 108, 247, 0.2);
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-block;
+  text-align: center;
+}
+
+.primary-btn {
+  background-color: #4a6cf7;
+  color: #fff;
+}
+
+.primary-btn:hover {
+  background-color: #3a5bd9;
+}
+
+.danger-btn {
+  background-color: #f44336;
+  color: #fff;
+}
+
+.danger-btn:hover {
+  background-color: #d32f2f;
+}
+
+/* 管理面板样式 */
+.admin-panel {
+  max-width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  width: 600px;
+}
+
+@media (max-width: 768px) {
+  .admin-panel {
+    width: 95%;
+    max-height: 80vh;
+    padding: 1rem;
+  }
+
+  .modal-content {
+    width: 95%;
+    padding: 1rem;
+  }
+
+  .form-group {
+    margin-bottom: 0.75rem;
+  }
+
+  .category-selection {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .category-selection button {
+    margin-top: 0.5rem;
+  }
+
+  .tabs {
+    flex-wrap: wrap;
+  }
+
+  .tab-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+}
+
+.tabs {
+  display: flex;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+.tab-btn {
+  padding: 0.75rem 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.tab-btn:hover {
+  color: #4a6cf7;
+}
+
+.tab-btn.active {
+  color: #4a6cf7;
+  border-bottom-color: #4a6cf7;
+}
+
+.tab-content {
+  animation: fade-in 0.3s ease-in-out;
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #555;
+}
+
+.form-group input[type="checkbox"] {
+  margin-right: 0.5rem;
+}
+
+.site-preview {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  border: 1px solid #eee;
+  border-radius: 6px;
+  background-color: #f9f9f9;
+}
+
+/* 隐藏受限内容 */
 .box.warn {
   display: none;
+}
+
+/* 响应式设计 */
+@media (max-width: 992px) {
+  .main-content {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    padding: 1rem;
+  }
+
+  .container {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  header {
+    padding: 1rem;
+  }
+
+  .logo h1 {
+    font-size: 1.2rem;
+  }
+
+  nav ul {
+    display: none;
+    position: absolute;
+    top: 70px;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    flex-direction: column;
+    padding: 1rem 0;
+  }
+
+  nav ul.active {
+    display: flex;
+  }
+
+  nav ul li {
+    width: 100%;
+  }
+
+  nav ul li a {
+    padding: 0.75rem 2rem;
+    width: 100%;
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+
+  main {
+    padding: 1rem;
+  }
+
+  .container {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-content {
+    width: 95%;
+    padding: 1.5rem;
+  }
+}
+
+/* 图片上传区域样式 */
+.image-upload-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.drag-area {
+  border: 2px dashed #4a6cf7;
+  border-radius: 6px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-color: #f8f9ff;
+}
+
+.drag-area.active {
+  border-color: #3a5bd9;
+  background-color: #eef1ff;
+}
+
+.drag-area .icon {
+  font-size: 2rem;
+  color: #4a6cf7;
+  margin-bottom: 0.5rem;
+}
+
+.drag-area p {
+  font-size: 1rem;
+  color: #666;
+  margin: 0;
+}
+
+.drag-area p span {
+  color: #4a6cf7;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.image-preview {
+  display: none;
+  width: 100%;
+  max-height: 150px;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-top: 0.5rem;
+}
+
+.image-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 分类选择样式 */
+.category-selection {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.category-selection select {
+  flex: 1;
+}
+
+.secondary-btn {
+  background-color: #e9ecef;
+  color: #495057;
+}
+
+.secondary-btn:hover {
+  background-color: #dee2e6;
+}
+
+/* 修复背景视频尺寸 */
+#bgVideo {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  z-index: -1;
+  object-fit: cover;
 }

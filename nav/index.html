@@ -1,143 +1,405 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1898999196115953"
-     crossorigin="anonymous"></script>
-  <title>平平无奇的导航页</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <nav>
-    <ul id="navList">
-      <li><a href="#">主页</a></li>
-      <li><a href="#">关于</a></li>
-      <li><a href="#" id="contactBtn">联络</a></li>
-    </ul>
-  </nav>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1898999196115953"
+      crossorigin="anonymous"
+    ></script>
+    <title>平平无奇的导航页</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <header>
+      <div class="logo">
+        <h1>平平无奇的导航页</h1>
+      </div>
+      <nav>
+        <ul id="navList">
+          <li>
+            <a href="#" class="active"><i class="fas fa-home"></i> 主页</a>
+          </li>
+          <li>
+            <a href="#"><i class="fas fa-info-circle"></i> 关于</a>
+          </li>
+          <li>
+            <a href="#" id="contactBtn"><i class="fas fa-envelope"></i> 联络</a>
+          </li>
+          <li>
+            <a href="#" id="loginToggle"><i class="fas fa-user"></i> 登录</a>
+          </li>
+        </ul>
+      </nav>
+      <div class="menu-toggle" id="sidebarIcon">
+        <i class="fas fa-bars"></i>
+      </div>
+    </header>
 
-  <h1>欢迎来到平平无奇的导航页!</h1>
+    <div class="main-content">
+      <aside id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+          <h3>分类</h3>
+        </div>
+        <ul class="category-list">
+          <li>
+            <a href="#全部" class="active"><i class="fas fa-globe"></i> 全部</a>
+          </li>
+          <li>
+            <a href="#娱乐"><i class="fas fa-gamepad"></i> 娱乐</a>
+          </li>
+          <li>
+            <a href="#工具"><i class="fas fa-tools"></i> 工具</a>
+          </li>
+          <li>
+            <a href="#二次元"><i class="fas fa-heart"></i> 二次元</a>
+          </li>
+          <li>
+            <a href="#AI画图"><i class="fas fa-paint-brush"></i> AI画图</a>
+          </li>
+        </ul>
+      </aside>
 
-  <div id="sidebarIcon">☰</div>
-  <div id="sidebar">
-    <h3>分类</h3>
-    <ul>
-      <li><a href="#全部">全部</a></li>
-      <li><a href="#娱乐">娱乐</a></li>
-      <li><a href="#工具">工具</a></li>
-      <li><a href="#二次元">二次元</a></li>
-      <li><a href="#AI画图">AI画图</a></li>
-    </ul>
-  </div>
+      <main>
+        <div class="container" id="sitesContainer">
+          <!-- 娱乐类网站 -->
+          <div class="box 娱乐">
+            <a href="https://www.xyg688.com/" target="_blank">
+              <div class="box-image">
+                <img src="images/image1.jpg" alt="xyg688" />
+              </div>
+              <div class="box-content">
+                <h2>xyg688</h2>
+                <p>游戏资源</p>
+              </div>
+            </a>
+          </div>
 
-  <div class="container">
-    <div class="box 娱乐">
-      <a href="https://www.xyg688.com/" target="_blank">
-        <img src="images/image1.jpg" alt="https://www.xyg688.com/">
-        <h2>xyg688</h2>
-        <p>游戏资源</p>
-      </a>
+          <div class="box 娱乐">
+            <a href="https://xiaobaotv.net/index.php" target="_blank">
+              <div class="box-image">
+                <img src="images/image2.jpg" alt="小宝影院" />
+              </div>
+              <div class="box-content">
+                <h2>小宝影院</h2>
+                <p>免费看剧</p>
+              </div>
+            </a>
+          </div>
+
+          <!-- 二次元类网站 -->
+          <div class="box 二次元 warn">
+            <a href="https://www.aiweifulishe.net" target="_blank">
+              <div class="box-image">
+                <img src="images/image3.jpg" alt="美图秀秀" />
+              </div>
+              <div class="box-content">
+                <h2>美图秀秀</h2>
+                <p>好康的(*´∀ ˋ*)</p>
+              </div>
+            </a>
+          </div>
+
+          <div class="box 二次元 warn">
+            <a href="https://dimtown.com/" target="_blank">
+              <div class="box-image">
+                <img src="images/image4.jpg" alt="二次元老窝" />
+              </div>
+              <div class="box-content">
+                <h2>捅了二次元的老窝了</h2>
+                <p>非二次元禁止进入</p>
+              </div>
+            </a>
+          </div>
+
+          <!-- 工具类网站 -->
+          <div class="box 工具">
+            <a href="https://app.illuminarty.ai/" target="_blank">
+              <div class="box-image">
+                <img src="images/image5.jpg" alt="识别AI画图" />
+              </div>
+              <div class="box-content">
+                <h2>识别AI画图</h2>
+                <p>要用魔法打败魔法</p>
+              </div>
+            </a>
+          </div>
+
+          <div class="box 工具">
+            <a href="http://ltzhp.ysepan.com/" target="_blank">
+              <div class="box-image">
+                <img src="images/image6.jpg" alt="实用标签页" />
+              </div>
+              <div class="box-content">
+                <h2>某人的超实用标签页</h2>
+                <p>万能的up主</p>
+              </div>
+            </a>
+          </div>
+
+          <div class="box 工具 warn">
+            <a href="https://www.acgbox.link/" target="_blank">
+              <div class="box-image">
+                <img src="images/image7.jpg" alt="ACG懂的都懂" />
+              </div>
+              <div class="box-content">
+                <h2>ACG懂的都懂</h2>
+                <p>啥网站都能搜</p>
+              </div>
+            </a>
+          </div>
+
+          <div class="box 二次元">
+            <a href="https://www.acgnsq.com/" target="_blank">
+              <div class="box-image">
+                <img src="images/image8.jpg" alt="ACG社区" />
+              </div>
+              <div class="box-content">
+                <h2>ACG社区</h2>
+                <p>不懂就发帖问</p>
+              </div>
+            </a>
+          </div>
+
+          <div class="box 工具">
+            <a href="https://yandex.com/" target="_blank">
+              <div class="box-image">
+                <img src="images/image9.jpg" alt="Yandex搜索引擎" />
+              </div>
+              <div class="box-content">
+                <h2>一个比Google好用的搜索引擎</h2>
+                <p>可搜图片</p>
+              </div>
+            </a>
+          </div>
+
+          <div class="box AI画图">
+            <a href="https://aitag.top" target="_blank">
+              <div class="box-image">
+                <img src="images/image10.jpg" alt="魔咒百科" />
+              </div>
+              <div class="box-content">
+                <h2>魔咒百科</h2>
+                <p>魔法导论必备工具</p>
+              </div>
+            </a>
+          </div>
+
+          <div class="box 娛樂">
+            <a href="https://ws.imc.re/eaglerx/" target="_blank">
+              <div class="box-image">
+                <img src="images/image11.jpg" alt="線上MC" />
+              </div>
+              <div class="box-content">
+                <h2>線上MC</h2>
+                <p>有得自行車就不錯了</p>
+              </div>
+            </a>
+          </div>
+        </div>
+      </main>
     </div>
 
-    <div class="box 娱乐">
-      <a href="https://xiaobaotv.net/index.php" target="_blank">
-        <img src="images/image2.jpg" alt="https://xiaobaotv.net/index.php">
-        <h2>小宝影院</h2>
-        <p>免费看剧</p>
-      </a>
+    <!-- 模态框 -->
+    <div class="modal" id="passwordModal">
+      <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h3>请输入密码</h3>
+        <input type="password" id="passwordInput" placeholder="输入密码..." />
+        <button id="submitBtn" class="btn primary-btn">提交</button>
+      </div>
     </div>
 
-    <div class="box 二次元 warn">
-      <a href="https://www.aiweifulishe.net" target="_blank">
-        <img src="images/image3.jpg" alt="https://www.aiweifulishe.net">
-        <h2>美图秀秀</h2>
-        <p>好康的(*´∀ ˋ*)</p>
-      </a>
+    <div class="modal" id="loginModal">
+      <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h3>管理员登录</h3>
+        <input type="text" id="username" placeholder="用户名" />
+        <input type="password" id="password" placeholder="密码" />
+        <button id="loginBtn" class="btn primary-btn">登录</button>
+      </div>
     </div>
 
-    <div class="box 二次元 warn">
-      <a href="https://dimtown.com/" target="_blank">
-        <img src="images/image4.jpg" alt="https://dimtown.com/">
-        <h2>捅了二次元的老窝了</h2>
-        <p>非二次元禁止进入</p>
-      </a>
+    <div class="modal" id="adminModal">
+      <div class="modal-content admin-panel">
+        <span class="close-btn">&times;</span>
+        <h3>网站管理</h3>
+
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="add">添加网站</button>
+          <button class="tab-btn" data-tab="edit">编辑网站</button>
+          <button class="tab-btn" data-tab="remove">删除网站</button>
+        </div>
+
+        <div class="tab-content" id="addTab">
+          <form id="addSiteForm">
+            <div class="form-group">
+              <label for="siteUrl">网站链接</label>
+              <input
+                type="text"
+                id="siteUrl"
+                placeholder="https://example.com"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="siteName">网站名称</label>
+              <input
+                type="text"
+                id="siteName"
+                placeholder="网站名称"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="siteDescription">网站描述</label>
+              <input
+                type="text"
+                id="siteDescription"
+                placeholder="简短描述"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="siteCategory">网站分类</label>
+              <div class="category-selection">
+                <select id="siteCategory" required>
+                  <option value="娱乐">娱乐</option>
+                  <option value="工具">工具</option>
+                  <option value="二次元">二次元</option>
+                  <option value="AI画图">AI画图</option>
+                </select>
+                <button
+                  type="button"
+                  id="addCategoryBtn"
+                  class="btn secondary-btn"
+                >
+                  添加新分类
+                </button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="siteImage">图片</label>
+              <div class="image-upload-container">
+                <input type="text" id="siteImage" placeholder="图片链接" />
+                <div class="drag-area" id="dragArea">
+                  <div class="icon">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                  </div>
+                  <p>拖放图片到这里或<span>点击上传</span></p>
+                  <input type="file" id="fileInput" hidden accept="image/*" />
+                </div>
+                <div class="image-preview" id="imagePreview"></div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="isRestricted">限制访问</label>
+              <input type="checkbox" id="isRestricted" />
+            </div>
+            <button type="submit" id="addLinkBtn" class="btn primary-btn">
+              添加网站
+            </button>
+          </form>
+        </div>
+
+        <div class="tab-content" id="editTab" style="display: none">
+          <div class="form-group">
+            <label for="editSiteSelect">选择网站</label>
+            <select id="editSiteSelect"></select>
+          </div>
+          <form id="editSiteForm">
+            <div class="form-group">
+              <label for="editSiteUrl">网站链接</label>
+              <input
+                type="text"
+                id="editSiteUrl"
+                placeholder="https://example.com"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="editSiteName">网站名称</label>
+              <input
+                type="text"
+                id="editSiteName"
+                placeholder="网站名称"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="editSiteDescription">网站描述</label>
+              <input
+                type="text"
+                id="editSiteDescription"
+                placeholder="简短描述"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="editSiteCategory">网站分类</label>
+              <div class="category-selection">
+                <select id="editSiteCategory" required>
+                  <option value="娱乐">娱乐</option>
+                  <option value="工具">工具</option>
+                  <option value="二次元">二次元</option>
+                  <option value="AI画图">AI画图</option>
+                </select>
+                <button
+                  type="button"
+                  id="editAddCategoryBtn"
+                  class="btn secondary-btn"
+                >
+                  添加新分类
+                </button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="editSiteImage">图片</label>
+              <div class="image-upload-container">
+                <input type="text" id="editSiteImage" placeholder="图片链接" />
+                <div class="drag-area" id="editDragArea">
+                  <div class="icon">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                  </div>
+                  <p>拖放图片到这里或<span>点击上传</span></p>
+                  <input
+                    type="file"
+                    id="editFileInput"
+                    hidden
+                    accept="image/*"
+                  />
+                </div>
+                <div class="image-preview" id="editImagePreview"></div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="editIsRestricted">限制访问</label>
+              <input type="checkbox" id="editIsRestricted" />
+            </div>
+            <button type="submit" id="updateLinkBtn" class="btn primary-btn">
+              更新网站
+            </button>
+          </form>
+        </div>
+
+        <div class="tab-content" id="removeTab" style="display: none">
+          <div class="form-group">
+            <label for="removeSiteSelect">选择要删除的网站</label>
+            <select id="removeSiteSelect"></select>
+          </div>
+          <div class="site-preview" id="removeSitePreview">
+            <!-- 预览将在这里显示 -->
+          </div>
+          <button id="removeLinkBtn" class="btn danger-btn">删除网站</button>
+        </div>
+      </div>
     </div>
 
-    <div class="box 工具">
-      <a href="https://app.illuminarty.ai/" target="_blank">
-        <img src="images/image5.jpg" alt="https://app.illuminarty.ai/">
-        <h2>识别AI画图</h2>
-        <p>要用魔法打败魔法</p>
-      </a>
-    </div>
-
-    <div class="box 工具">
-      <a href="http://ltzhp.ysepan.com/" target="_blank">
-        <img src="images/image6.jpg" alt="http://ltzhp.ysepan.com/">
-        <h2>某人的超实用标签页</h2>
-        <p>万能的up主</p>
-      </a>
-    </div>
-
-    <div class="box 工具 warn">
-      <a href="https://www.acgbox.link/" target="_blank">
-        <img src="images/image7.jpg" alt="https://www.acgbox.link/">
-        <h2>ACG懂的都懂</h2>
-        <p>啥网站都能搜</p>
-      </a>
-    </div>
-
-    <div class="box 二次元">
-      <a href="https://www.acgnsq.com/" target="_blank">
-        <img src="images/image8.jpg" alt="https://www.acgnsq.com/">
-        <h2>ACG社区</h2>
-        <p>不懂就发帖问</p>
-      </a>
-    </div>
-
-    <div class="box 工具">
-      <a href="https://yandex.com/" target="_blank">
-        <img src="images/image9.jpg" alt="https://yandex.com/">
-        <h2>一个比Google好用的搜索引擎</h2>
-        <p>可搜图片</p>
-      </a>
-    </div>
-
-    <div class="box AI画图">
-      <a href="https://aitag.top" target="_blamk">
-        <img src="images/image10.jpg" alt="https://aitag.top">
-        <h2>魔咒百科</h2>
-        <p>魔法导论必备工具</p>
-      </a>
-    </div>
-
-    <div class="box 娛樂">
-      <a href="https://ws.imc.re/eaglerx/" target="_blank">
-        <img src="images/image11.jpg" alt="https://ws.imc.re/eaglerx/">
-        <h2>線上MC</h2>
-        <p>有得自行車就不錯了</p>
-      </a>
-    </div>
-
-    <div id="popup" style="display: none;">
-      <input type="password" id="passwordInput">
-      <button id="submitBtn">Submit</button>
-    </div>
-  </div>
-
-  <div id="loginForm" style="display: none;">
-    <input type="text" id="username" placeholder="Username">
-    <input type="password" id="password" placeholder="Password">
-    <button id="loginBtn">Login</button>
-  </div>
-
-  <div id="adminPanel" style="display: none;">
-    <h3>Admin Panel</h3>
-    <input type="text" id="newLink" placeholder="New Link">
-    <input type="text" id="newDescription" placeholder="New Description">
-    <button id="addLinkBtn">Add Link</button>
-    <button id="removeLinkBtn">Remove Link</button>
-  </div>
-
-  <script src="script.js"></script>
-</body>
+    <script src="script.js"></script>
+  </body>
 </html>
