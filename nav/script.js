@@ -236,6 +236,9 @@ function handlePasswordSubmit() {
     // Add video background
     addVideoBackground();
 
+    // 让 sidebar 毛玻璃化
+    sidebar.classList.add("liquid-glass");
+
     // Close password modal
     closeAllModals();
   } else {

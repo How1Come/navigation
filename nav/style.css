@@ -103,6 +103,15 @@ nav ul li a i {
   transition: all 0.3s ease;
 }
 
+.sidebar.liquid-glass {
+  background: rgba(255, 255, 255, 0.25);
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  border-right: 1.5px solid rgba(255, 255, 255, 0.18);
+  transition: background 0.5s, backdrop-filter 0.5s;
+}
+
 .sidebar-header h3 {
   font-size: 1.2rem;
   margin-bottom: 1.5rem;
