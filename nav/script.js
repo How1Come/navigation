@@ -236,8 +236,9 @@ function handlePasswordSubmit() {
     // Add video background
     addVideoBackground();
 
-    // 让 sidebar 毛玻璃化
+    // 讓 sidebar 和 header 毛玻璃化
     sidebar.classList.add("liquid-glass");
+    document.querySelector("header").classList.add("liquid-glass");
 
     // Close password modal
     closeAllModals();
@@ -249,13 +250,14 @@ function handlePasswordSubmit() {
 // Add video background
 function addVideoBackground() {
   // Remove existing video if any
-  const existingVideo = document.querySelector("video");
+  const existingVideo = document.getElementById("bgVideo");
   if (existingVideo) {
     existingVideo.remove();
   }
 
   // Create video element
   const video = document.createElement("video");
+  video.id = "bgVideo";
   const source = document.createElement("source");
 
   // Choose random video
@@ -268,16 +270,9 @@ function addVideoBackground() {
   video.setAttribute("autoplay", true);
   video.setAttribute("loop", true);
   video.setAttribute("muted", true);
-  video.style.position = "fixed";
-  video.style.right = "0";
-  video.style.bottom = "0";
-  video.style.minWidth = "100%";
-  video.style.minHeight = "100%";
-  video.style.width = "auto";
-  video.style.height = "auto";
-  video.style.zIndex = "-1";
+  video.setAttribute("playsinline", true);
 
-  // Add to body
+  // CSS 由 style.css 控制
   document.body.appendChild(video);
 }
 
