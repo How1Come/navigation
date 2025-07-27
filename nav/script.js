@@ -154,7 +154,7 @@ function filterSitesByCategory(e) {
   console.log("Extracted category:", category);
 
   // Show/hide sites based on category
-  const boxes = document.querySelectorAll(":not(.box.warn)");
+  const boxes = document.querySelectorAll(".box:not(.warn)");
   boxes.forEach((box) => {
     if (category === "全部") {
       box.style.display = "block";
