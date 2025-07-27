@@ -154,7 +154,7 @@ function filterSitesByCategory(e) {
   console.log("Extracted category:", category);
 
   // Show/hide sites based on category
-  const boxes = document.querySelectorAll(".box");
+  const boxes = document.querySelectorAll(":not(.box.warn)");
   boxes.forEach((box) => {
     if (category === "全部") {
       box.style.display = "block";
@@ -207,6 +207,18 @@ function handleLogin() {
     document.querySelectorAll(".box.warn").forEach((box) => {
       box.style.display = "block";
     });
+
+      // Show/hide sites based on category
+    const boxes = document.querySelectorAll(".box");
+    boxes.forEach((box) => {
+      if (category === "全部") {
+        box.style.display = "block";
+      } else if (box.classList.contains(category)) {
+        box.style.display = "block";
+      } else {
+        box.style.display = "none";
+      }
+  });
   } else {
     alert("用户名或密码错误");
   }
