@@ -563,6 +563,49 @@ header.folded {
   background: rgba(74,108,247,0.15);
 }
 
+/* Sidebar 收合按鈕浮動顯示 */
+#foldSidebarBtn {
+  position: absolute;
+  left: 0;
+  top: 20px;
+  transform: translateX(-50%);
+  z-index: 200;
+}
+
+/* Header 收合按鈕浮動顯示 */
+#foldHeaderBtn {
+  position: absolute;
+  right: 30px;
+  top: 10px;
+  transform: translateY(-50%);
+  z-index: 200;
+}
+
+/* 收合時，讓按鈕顯示在外面 */
+.sidebar.folded #foldSidebarBtn {
+  left: 0;
+  top: 20px;
+  transform: translateX(-50%);
+  z-index: 200;
+  background: #fff;
+}
+
+header.folded #foldHeaderBtn {
+  right: 30px;
+  top: 10px;
+  transform: translateY(-50%);
+  z-index: 200;
+  background: #fff;
+}
+
+/* 收合時，按鈕圖標方向改變 */
+.sidebar.folded #foldSidebarBtn i {
+  transform: rotate(180deg);
+}
+header.folded #foldHeaderBtn i {
+  transform: rotate(180deg);
+}
+
 /* 响应式设计 */
 @media (max-width: 992px) {
   .main-content {
