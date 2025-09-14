@@ -29,6 +29,14 @@ const removeSitePreview = document.getElementById("removeSitePreview");
 let sites = [];
 let isAdmin = false; // 新增：管理員登入狀態
 
+// 新增狀態：是否顯示受限網站、是否啟用特殊視覺
+let showWarn = false;
+let specialVisuals = false;
+
+// DOM for new controls
+const toggleWarnBtn = document.getElementById("toggleWarnBtn");
+const visualsToggle = document.getElementById("visualsToggle");
+
 // Initialize the application
 function init() {
   // Load sites from localStorage
@@ -40,9 +48,32 @@ function init() {
   // Populate site selects
   populateSiteSelects();
 
+  // 儲存每個 box 原始圖片來源（用於還原）
+  document.querySelectorAll(".box img").forEach((img) => {
+    if (!img.dataset.originalSrc) img.dataset.originalSrc = img.src;
+  });
+
+  // 從 localStorage 載入之前的狀態
+  showWarn = localStorage.getItem("showWarn") === "true";
+  specialVisuals = localStorage.getItem("specialVisuals") === "true";
+
+  // 套用狀態 UI（按鈕文字 / checkbox）
+  if (toggleWarnBtn) {
+    toggleWarnBtn.textContent = showWarn ? "隱藏受限網站" : "顯示受限網站";
+  }
+  if (visualsToggle) visualsToggle.checked = specialVisuals;
+
+  // 依狀態套用畫面
+  applyWarnVisibility(showWarn);
+  applySpecialVisuals(specialVisuals);
+
   // 初始化新功能
   initImageUploadAndCategories();
   fixBackgroundVideo();
+
+  // 預設為隱藏內容，需正確密碼才能看（若你之前已設計此行，保留）
+  sitesContainer.style.display = "none";
+  showModal(passwordModal);
 }
 
 // Add event listeners
@@ -135,6 +166,25 @@ function addEventListeners() {
       closeAllModals();
     }
   });
+
+  // 新增：管理控制的事件綁定（若元素存在）
+  if (toggleWarnBtn) {
+    toggleWarnBtn.addEventListener("click", () => {
+      showWarn = !showWarn;
+      localStorage.setItem("showWarn", showWarn);
+      toggleWarnBtn.textContent = showWarn ? "隱藏受限網站" : "顯示受限網站";
+      applyWarnVisibility(showWarn);
+    });
+    // 可見性在登出/登入間持久化，由 localStorage 處理
+  }
+
+  if (visualsToggle) {
+    visualsToggle.addEventListener("change", (e) => {
+      specialVisuals = e.target.checked;
+      localStorage.setItem("specialVisuals", specialVisuals);
+      applySpecialVisuals(specialVisuals);
+    });
+  }
 }
 
 // Handle navigation item click
@@ -180,11 +230,11 @@ function filterSitesByCategory(e) {
   const category = clickedLink.getAttribute("href").substring(1);
   console.log("Extracted category:", category);
 
-  // Show/hide sites based on category
+  // Show/hide sites based on category and showWarn flag
   const boxes = document.querySelectorAll(".box");
   boxes.forEach((box) => {
-    // 受限網站只有管理員能看見
-    if (box.classList.contains("warn") && !isAdmin) {
+    // 受限網站顯示邏輯改為使用 showWarn（可由管理開關控制）
+    if (box.classList.contains("warn") && !showWarn) {
       box.style.display = "none";
       return;
     }
@@ -203,69 +253,99 @@ function filterSitesByCategory(e) {
   }
 }
 
-// Show modal
-function showModal(modal) {
-  // Close all modals first
-  closeAllModals();
+// Apply or remove show/hide for warn boxes (重新依當前分類計算)
+function applyWarnVisibility(show) {
+  const activeLink = document.querySelector(".category-list li a.active");
+  const activeCategory = activeLink
+    ? activeLink.getAttribute("href").substring(1)
+    : "全部";
 
-  // Show the specified modal
-  modal.style.display = "flex";
-}
+  const boxes = document.querySelectorAll(".box");
+  boxes.forEach((box) => {
+    if (!box.classList.contains("warn")) {
+      // 非受限依分類顯示
+      if (activeCategory === "全部") {
+        box.style.display = "block";
+      } else if (box.classList.contains(activeCategory)) {
+        box.style.display = "block";
+      } else {
+        box.style.display = "none";
+      }
+      return;
+    }
 
-// Close all modals
-function closeAllModals() {
-  const modals = document.querySelectorAll(".modal");
-  modals.forEach((modal) => {
-    modal.style.display = "none";
+    // 受限盒子
+    if (!show) {
+      box.style.display = "none";
+      return;
+    }
+
+    // show === true：依分類顯示
+    if (activeCategory === "全部") {
+      box.style.display = "block";
+    } else if (box.classList.contains(activeCategory)) {
+      box.style.display = "block";
+    } else {
+      box.style.display = "none";
+    }
   });
 }
 
-// Handle login
-function handleLogin() {
-  const username = document.getElementById("username").value;
-  const password = document.getElementById("password").value;
+// Apply or revert special visuals (封面與背景)
+function applySpecialVisuals(enabled) {
+  // 圖片替換：使用每個 img.dataset.originalSrc 作為還原來源
+  const boxes = document.querySelectorAll(".box");
+  boxes.forEach((box, index) => {
+    const img = box.querySelector("img");
+    if (!img) return;
 
-  if (username === "admin" && password === "howcome") {
-    isAdmin = true; // 新增
-    // Close login modal
-    closeAllModals();
+    if (enabled) {
+      // 儲存原始如果尚未儲存
+      if (!img.dataset.originalSrc) img.dataset.originalSrc = img.src;
+      img.src = `simages/s${index + 1}.jpg`;
+    } else {
+      // 還原原圖
+      if (img.dataset.originalSrc) {
+        img.src = img.dataset.originalSrc;
+      } else {
+        // 嘗試由 sites 資料還原（若存在 id）
+        const id = box.dataset.id;
+        if (id) {
+          const site = sites.find((s) => s.id === id);
+          if (site && site.imageUrl) img.src = site.imageUrl;
+        }
+      }
+    }
+  });
 
-    // Show admin panel
-    showModal(adminModal);
-
-    // Populate site selects to ensure they are up-to-date
-    populateSiteSelects();
-
-    // Show restricted sites
-    document.querySelectorAll(".box.warn").forEach((box) => {
-      box.style.display = "block";
-    });
+  // 背景影片
+  if (enabled) {
+    addVideoBackground();
+    sidebar.classList.add("liquid-glass");
+    document.querySelector("header").classList.add("liquid-glass");
   } else {
-    alert("用户名或密码错误");
+    const existingVideo = document.getElementById("bgVideo");
+    if (existingVideo) existingVideo.remove();
+    sidebar.classList.remove("liquid-glass");
+    document.querySelector("header").classList.remove("liquid-glass");
   }
 }
 
-// Handle password submit
+// 修改 handlePasswordSubmit 以利用 specialVisuals 狀態（輸入正確密碼時啟用 specialVisuals）
 function handlePasswordSubmit() {
   const password = document.getElementById("passwordInput").value;
 
   if (password === "277353") {
-    // Replace images with special images
-    const boxes = document.querySelectorAll(".box");
-    boxes.forEach((box, index) => {
-      const img = box.querySelector("img");
-      if (img) {
-        img.src = `simages/s${index + 1}.jpg`;
-      }
-    });
+    // 顯示內容
+    sitesContainer.style.display = "grid";
 
-    // Add video background
-    addVideoBackground();
+    // 啟用特殊視覺（並保存狀態）
+    specialVisuals = true;
+    localStorage.setItem("specialVisuals", "true");
+    if (visualsToggle) visualsToggle.checked = true;
+    applySpecialVisuals(true);
 
-    // 讓 sidebar 和 header 毛玻璃化
-    sidebar.classList.add("liquid-glass");
-    document.querySelector("header").classList.add("liquid-glass");
-
+    // 讓 sidebar 和 header 毛玻璃化（applySpecialVisuals 已處理）
     // Close password modal
     closeAllModals();
   } else {
@@ -518,8 +598,17 @@ function addSiteToDOM(site) {
     </a>
   `;
 
-  // Add to container
+  // Append and then store original src for future還原
   sitesContainer.appendChild(siteElement);
+  const img = siteElement.querySelector("img");
+  if (img && !img.dataset.originalSrc) img.dataset.originalSrc = img.src;
+
+  // 如果目前 specialVisuals 已啟用，立即用特殊封面替換
+  if (specialVisuals) {
+    const boxes = Array.from(document.querySelectorAll(".box"));
+    const idx = boxes.indexOf(siteElement);
+    if (img) img.src = `simages/s${idx + 1}.jpg`;
+  }
 }
 
 // Update sites in DOM
@@ -828,8 +917,17 @@ function addSiteToDOM(site) {
     </a>
   `;
 
-  // Add to container
+  // Append and then store original src for future還原
   sitesContainer.appendChild(siteElement);
+  const img = siteElement.querySelector("img");
+  if (img && !img.dataset.originalSrc) img.dataset.originalSrc = img.src;
+
+  // 如果目前 specialVisuals 已啟用，立即用特殊封面替換
+  if (specialVisuals) {
+    const boxes = Array.from(document.querySelectorAll(".box"));
+    const idx = boxes.indexOf(siteElement);
+    if (img) img.src = `simages/s${idx + 1}.jpg`;
+  }
 }
 
 // Update sites in DOM
@@ -947,18 +1045,18 @@ const editImagePreview = document.getElementById("editImagePreview");
 const siteImageInput = document.getElementById("siteImage");
 const editSiteImageInput = document.getElementById("editSiteImage");
 
-// 添加新分类按钮
+// 添加新分類按鈕
 const addCategoryBtn = document.getElementById("addCategoryBtn");
 const editAddCategoryBtn = document.getElementById("editAddCategoryBtn");
 
-// 初始化拖放区域
+// 初始化拖放區域
 function initDragArea(dragArea, fileInput, imagePreview, imageUrlInput) {
-  // 点击拖放区域触发文件选择
+  // 點擊拖放區域觸發文件選擇
   dragArea.addEventListener("click", () => {
     fileInput.click();
   });
 
-  // 文件选择变化处理
+  // 文件選擇變化處理
   fileInput.addEventListener("change", function () {
     const file = this.files[0];
     if (file) {
@@ -966,7 +1064,7 @@ function initDragArea(dragArea, fileInput, imagePreview, imageUrlInput) {
     }
   });
 
-  // 拖放事件处理
+  // 拖放事件處理
   ["dragover", "dragleave", "drop"].forEach((eventName) => {
     dragArea.addEventListener(eventName, (e) => {
       e.preventDefault();
@@ -987,93 +1085,93 @@ function initDragArea(dragArea, fileInput, imagePreview, imageUrlInput) {
   });
 }
 
-// 处理上传的图片文件
+// 處理上傳的圖片文件
 function handleFile(file, imagePreview, imageUrlInput) {
   const reader = new FileReader();
 
   reader.onload = function (e) {
-    // 显示图片预览
-    imagePreview.innerHTML = `<img src="${e.target.result}" alt="预览图片">`;
+    // 顯示圖片預覽
+    imagePreview.innerHTML = `<img src="${e.target.result}" alt="預覽圖片">`;
     imagePreview.style.display = "block";
 
-    // 更新图片URL输入框
+    // 更新圖片URL輸入框
     imageUrlInput.value = e.target.result;
   };
 
   reader.readAsDataURL(file);
 }
 
-// 添加新分类功能
+// 添加新分類功能
 function setupAddCategory(addButton, categorySelect) {
   addButton.addEventListener("click", () => {
-    // 创建一个包含常用图标的数组
+    // 創建一個包含常用圖標的數組
     const suggestedIcons = [
       { name: "fas fa-star", description: "星星" },
-      { name: "fas fa-book", description: "书籍" },
-      { name: "fas fa-music", description: "音乐" },
-      { name: "fas fa-film", description: "电影" },
-      { name: "fas fa-code", description: "代码" },
-      { name: "fas fa-shopping-cart", description: "购物" },
+      { name: "fas fa-book", description: "書籍" },
+      { name: "fas fa-music", description: "音樂" },
+      { name: "fas fa-film", description: "電影" },
+      { name: "fas fa-code", description: "代碼" },
+      { name: "fas fa-shopping-cart", description: "購物" },
       { name: "fas fa-graduation-cap", description: "教育" },
-      { name: "fas fa-chart-line", description: "数据" },
-      { name: "fas fa-camera", description: "摄影" },
+      { name: "fas fa-chart-line", description: "數據" },
+      { name: "fas fa-camera", description: "攝影" },
       { name: "fas fa-utensils", description: "美食" },
       { name: "fas fa-plane", description: "旅行" },
       { name: "fas fa-briefcase", description: "工作" },
     ];
 
-    // 创建图标建议HTML
-    let iconSuggestionsHTML = "<p>建议图标：</p><div class='icon-suggestions'>";
+    // 創建圖標建議HTML
+    let iconSuggestionsHTML = "<p>建議圖標：</p><div class='icon-suggestions'>";
     suggestedIcons.forEach((icon) => {
       iconSuggestionsHTML += `<div class='icon-option'><i class='${icon.name}'></i> ${icon.description}</div>`;
     });
     iconSuggestionsHTML += "</div>";
 
-    // 创建自定义提示框
+    // 創建自定義提示框
     const customPrompt = document.createElement("div");
     customPrompt.className = "custom-prompt-overlay";
     customPrompt.innerHTML = `
       <div class="custom-prompt">
-        <h3>添加新分类</h3>
+        <h3>添加新分類</h3>
         <div class="form-group">
-          <label for="newCategoryName">分类名称</label>
-          <input type="text" id="newCategoryName" placeholder="输入新分类名称" required>
+          <label for="newCategoryName">分類名稱</label>
+          <input type="text" id="newCategoryName" placeholder="輸入新分類名稱" required>
         </div>
         <div class="form-group">
-          <label for="newCategoryIcon">分类图标</label>
-          <input type="text" id="newCategoryIcon" placeholder="输入图标类名，例如：fas fa-star">
+          <label for="newCategoryIcon">分類圖標</label>
+          <input type="text" id="newCategoryIcon" placeholder="輸入圖標類名，例如：fas fa-star">
         </div>
         ${iconSuggestionsHTML}
         <div class="prompt-buttons">
           <button type="button" id="cancelCategoryBtn" class="btn secondary-btn">取消</button>
-          <button type="button" id="confirmCategoryBtn" class="btn primary-btn">确认</button>
+          <button type="button" id="confirmCategoryBtn" class="btn primary-btn">確認</button>
         </div>
       </div>
     `;
     document.body.appendChild(customPrompt);
 
-    // 添加图标选项点击事件
+    // 添加圖標選項點擊事件
     document.querySelectorAll(".icon-option").forEach((option) => {
       option.addEventListener("click", function () {
         const iconClass = this.querySelector("i").className;
         document.getElementById("newCategoryIcon").value = iconClass;
-        // 移除其他选中状态
+        // 移除其他選中狀態
         document
           .querySelectorAll(".icon-option")
           .forEach((opt) => opt.classList.remove("selected"));
-        // 添加选中状态
+        // 添加選中狀態
         this.classList.add("selected");
       });
     });
 
-    // 取消按钮事件
+    // 取消按鈕事件
     document
       .getElementById("cancelCategoryBtn")
       .addEventListener("click", () => {
         document.body.removeChild(customPrompt);
       });
 
-    // 确认按钮事件
+    // 確認按鈕事件
     document
       .getElementById("confirmCategoryBtn")
       .addEventListener("click", () => {
@@ -1082,7 +1180,7 @@ function setupAddCategory(addButton, categorySelect) {
           document.getElementById("newCategoryIcon").value || "fas fa-folder";
 
         if (newCategory && newCategory.trim() !== "") {
-          // 检查分类是否已存在
+          // 檢查分類是否已存在
           let exists = false;
           for (let i = 0; i < categorySelect.options.length; i++) {
             if (categorySelect.options[i].value === newCategory) {
@@ -1099,7 +1197,7 @@ function setupAddCategory(addButton, categorySelect) {
             categorySelect.appendChild(option);
             option.selected = true;
 
-            // 添加到另一个下拉列表
+            // 添加到另一個下拉列表
             const otherSelect =
               categorySelect.id === "siteCategory"
                 ? document.getElementById("editSiteCategory")
@@ -1110,32 +1208,32 @@ function setupAddCategory(addButton, categorySelect) {
             otherOption.textContent = newCategory;
             otherSelect.appendChild(otherOption);
 
-            // 添加到侧边栏分类列表
+            // 添加到側邊欄分類列表
             addCategoryToSidebar(newCategory, iconClass);
 
-            // 保存分类到本地存储
+            // 保存分類到本地存儲
             saveCategories();
 
-            // 关闭提示框
+            // 關閉提示框
             document.body.removeChild(customPrompt);
           } else {
-            alert("该分类已存在!");
+            alert("該分類已存在!");
           }
         } else {
-          alert("请输入有效的分类名称!");
+          alert("請輸入有效的分類名稱!");
         }
       });
   });
 }
 
-// 添加分类到侧边栏
+// 添加分類到側邊欄
 function addCategoryToSidebar(category, iconClass = "fas fa-folder") {
   const categoryList = document.querySelector(".category-list");
   const li = document.createElement("li");
   li.innerHTML = `<a href="#${category}"><i class="${iconClass}"></i> ${category}</a>`;
   categoryList.appendChild(li);
 
-  // 添加点击事件
+  // 添加點擊事件
   li.querySelector("a").addEventListener("click", filterSitesByCategory);
 }
 
@@ -1159,7 +1257,7 @@ function filterByCategory(category) {
   }
 }
 
-// 保存分类到本地存储
+// 保存分類到本地存儲
 function saveCategories() {
   const categorySelect = document.getElementById("siteCategory");
   const categories = [];
@@ -1171,14 +1269,14 @@ function saveCategories() {
   localStorage.setItem("categories", JSON.stringify(categories));
 }
 
-// 加载分类
+// 加載分類
 function loadCategories() {
   const savedCategories = localStorage.getItem("categories");
   if (savedCategories) {
     const categories = JSON.parse(savedCategories);
-    const defaultCategories = ["娱乐", "工具", "二次元", "AI画图"];
+    const defaultCategories = ["娛樂", "工具", "二次元", "AI畫圖"];
 
-    // 添加新分类到下拉列表和侧边栏
+    // 添加新分類到下拉列表和側邊欄
     categories.forEach((category) => {
       if (!defaultCategories.includes(category)) {
         // 添加到下拉列表
@@ -1196,16 +1294,16 @@ function loadCategories() {
         option2.textContent = category;
         editSiteCategorySelect.appendChild(option2);
 
-        // 添加到侧边栏
+        // 添加到側邊欄
         addCategoryToSidebar(category);
       }
     });
   }
 }
 
-// 初始化拖放区域和分类功能
+// 初始化拖放區域和分類功能
 function initImageUploadAndCategories() {
-  // 初始化拖放区域
+  // 初始化拖放區域
   initDragArea(dragArea, fileInput, imagePreview, siteImageInput);
   initDragArea(
     editDragArea,
@@ -1214,18 +1312,18 @@ function initImageUploadAndCategories() {
     editSiteImageInput
   );
 
-  // 初始化添加分类功能
+  // 初始化添加分類功能
   setupAddCategory(addCategoryBtn, document.getElementById("siteCategory"));
   setupAddCategory(
     editAddCategoryBtn,
     document.getElementById("editSiteCategory")
   );
 
-  // 加载保存的分类
+  // 加載保存的分類
   loadCategories();
 }
 
-// 修复背景视频尺寸
+// 修復背景視頻尺寸
 function fixBackgroundVideo() {
   const bgVideo = document.getElementById("bgVideo");
   if (bgVideo) {
@@ -1235,5 +1333,5 @@ function fixBackgroundVideo() {
   }
 }
 
-// 初始化应用程序
+// 初始化應用程序
 document.addEventListener("DOMContentLoaded", init);

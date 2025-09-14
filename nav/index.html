@@ -39,10 +39,13 @@
       <div class="menu-toggle" id="sidebarIcon">
         <i class="fas fa-bars"></i>
       </div>
-      <button id="foldHeaderBtn" title="收合导航栏" style="margin-left:10px;">
-        <i class="fas fa-angle-up"></i>
-      </button>
     </header>
+
+    <!-- 固定在畫面右上，避免被 header 收合隱藏 -->
+    <button id="foldHeaderBtn" title="收合導航欄"
+      style="position:fixed; top:10px; right:10px; z-index:9999; background:transparent; border:none; cursor:pointer;">
+      <i class="fas fa-angle-up"></i>
+    </button>
 
     <div class="main-content">
       <aside id="sidebar" class="sidebar">
@@ -256,6 +259,15 @@
           <button class="tab-btn active" data-tab="add">添加网站</button>
           <button class="tab-btn" data-tab="edit">编辑网站</button>
           <button class="tab-btn" data-tab="remove">删除网站</button>
+        </div>
+
+        <!-- 新增管理控制：顯示受限網站 & 特殊視覺開關 -->
+        <div class="admin-controls" style="margin:10px 0; display:flex; gap:12px; align-items:center;">
+          <button id="toggleWarnBtn" class="btn secondary-btn" type="button">顯示受限網站</button>
+          <label style="display:flex; align-items:center; gap:6px; margin-left:6px;">
+            <input type="checkbox" id="visualsToggle" />
+            <span>特殊封面 / 背景</span>
+          </label>
         </div>
 
         <div class="tab-content" id="addTab">
