@@ -39,6 +39,7 @@ const visualsToggle = document.getElementById("visualsToggle");
 
 // Initialize the application
 function init() {
+  console.log("init() called"); // 除錯用，可移除
   // Load sites from localStorage
   loadSites();
 
@@ -1343,5 +1344,50 @@ function fixBackgroundVideo() {
   }
 }
 
-// 初始化應用程序
-document.addEventListener("DOMContentLoaded", init);
+// 初始化應用程式
+function init() {
+  console.log("init() called"); // 除錯用，可移除
+  // Load sites from localStorage
+  loadSites();
+
+  // Add event listeners
+  addEventListeners();
+
+  // Populate site selects
+  populateSiteSelects();
+
+  // 儲存每個 box 原始圖片來源（用於還原）
+  document.querySelectorAll(".box img").forEach((img) => {
+    if (!img.dataset.originalSrc) img.dataset.originalSrc = img.src;
+  });
+
+  // 從 localStorage 載入之前的狀態
+  showWarn = localStorage.getItem("showWarn") === "true";
+  specialVisuals = localStorage.getItem("specialVisuals") === "true";
+
+  // 套用狀態 UI（按鈕文字 / checkbox）
+  if (toggleWarnBtn) {
+    toggleWarnBtn.textContent = showWarn ? "隱藏受限網站" : "顯示受限網站";
+  }
+  if (visualsToggle) visualsToggle.checked = specialVisuals;
+
+  // 依狀態套用畫面
+  applyWarnVisibility(showWarn);
+  applySpecialVisuals(specialVisuals);
+
+  // 初始化新功能
+  initImageUploadAndCategories();
+  fixBackgroundVideo();
+
+  // 預設為隱藏內容，需正確密碼才能看（若你之前已設計此行，保留）
+  sitesContainer.style.display = "none";
+  showModal(passwordModal);
+}
+
+// 取代單純的 DOMContentLoaded 註冊，改為依 readyState 判斷
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", init);
+} else {
+  // DOM 已就緒，立即初始化
+  init();
+}
