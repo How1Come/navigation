@@ -128,8 +128,18 @@ function addEventListeners() {
   }
 
   // Modal triggers
-  contactBtn.addEventListener("click", () => showModal(passwordModal));
-  loginToggle.addEventListener("click", () => showModal(loginModal));
+  if (contactBtn) {
+    contactBtn.addEventListener("click", function (e) {
+      if (e && typeof e.preventDefault === "function") e.preventDefault();
+      showModal(passwordModal);
+    });
+  }
+  if (loginToggle) {
+    loginToggle.addEventListener("click", function (e) {
+      if (e && typeof e.preventDefault === "function") e.preventDefault();
+      showModal(loginModal);
+    });
+  }
 
   // Modal close buttons
   closeButtons.forEach((btn) => {
