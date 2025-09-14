@@ -220,7 +220,7 @@ function addEventListeners() {
       toggleWarnBtn.textContent = showWarn ? "隱藏受限網站" : "顯示受限網站";
       applyWarnVisibility(showWarn);
     });
-    // 可見性在登出/登入間持久化，由 localStorage 處理
+    // 可見性在登出/登入間持久化，由 localStorage處理
   }
 
   if (visualsToggle) {
@@ -1150,4 +1150,29 @@ if (document.readyState === "loading") {
 } else {
   // DOM 已就緒，立即初始化
   init();
+}
+
+// 新增：處理管理員登入（避免 ReferenceError）
+function handleLogin() {
+  const username = document.getElementById("username")?.value || "";
+  const password = document.getElementById("password")?.value || "";
+
+  if (username === "admin" && password === "howcome") {
+    isAdmin = true;
+    // 關閉其他 modal 並開啟 admin 管理面板
+    closeAllModals();
+    showModal(adminModal);
+
+    // 更新站點選單以確保最新
+    populateSiteSelects();
+
+    // 若管理者登入，根據 showWarn 顯示受限網站（預設 showWarn 為 localStorage 的值）
+    document.querySelectorAll(".box.warn").forEach((box) => {
+      box.style.display = showWarn ? "block" : "none";
+    });
+
+    alert("管理員登入成功");
+  } else {
+    alert("用户名或密码错误");
+  }
 }
