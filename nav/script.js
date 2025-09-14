@@ -376,7 +376,7 @@ function applySpecialVisuals(enabled) {
   }
 }
 
-// 修改 handlePasswordSubmit 以利用 specialVisuals 狀態（輸入正確密碼時啟用 specialVisuals）
+// 修改 handlePasswordSubmit 以在驗證成功時顯示內容並還原為預設封面/背景
 function handlePasswordSubmit() {
   const password = document.getElementById("passwordInput").value;
 
@@ -384,14 +384,18 @@ function handlePasswordSubmit() {
     // 顯示內容
     sitesContainer.style.display = "grid";
 
-    // 啟用特殊視覺（並保存狀態）
-    specialVisuals = true;
-    localStorage.setItem("specialVisuals", "true");
-    if (visualsToggle) visualsToggle.checked = true;
-    applySpecialVisuals(true);
+    // 確保特殊視覺關閉（還原封面與背景為預設）
+    specialVisuals = false;
+    localStorage.setItem("specialVisuals", "false");
+    if (visualsToggle) visualsToggle.checked = false;
+    applySpecialVisuals(false);
 
-    // 讓 sidebar 和 header 毛玻璃化（applySpecialVisuals 已處理）
-    // Close password modal
+    // 移除毛玻璃樣式（如有）
+    sidebar.classList.remove("liquid-glass");
+    const hdr = document.querySelector("header");
+    if (hdr) hdr.classList.remove("liquid-glass");
+
+    // 關閉密碼模態框
     closeAllModals();
   } else {
     alert("密码错误");
