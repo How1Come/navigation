@@ -14,7 +14,41 @@ const loginModal = document.getElementById("loginModal");
 const adminModal = document.getElementById("adminModal");
 
 // Modal close buttons
-const closeButtons = document.querySelectorAll(".close-btn");
+// const closeButtons = document.querySelectorAll(".close-btn"); // Duplicate declaration removed
+
+// --- 新增：確保 modal 控制函式在事件綁定前可用 ---
+function showModal(modal) {
+  try {
+    // 先關閉其他 modal
+    closeAllModals();
+    if (!modal) return;
+    modal.style.display = "flex";
+    modal.style.zIndex = "10000";
+    if (!modal.hasAttribute("tabindex")) modal.setAttribute("tabindex", "-1");
+    setTimeout(() => {
+      try {
+        modal.focus();
+      } catch (e) {
+        /* ignore */
+      }
+    }, 50);
+  } catch (e) {
+    console.error("showModal error:", e);
+  }
+}
+
+function closeAllModals() {
+  try {
+    const modals = document.querySelectorAll(".modal");
+    modals.forEach((modal) => {
+      modal.style.display = "none";
+      modal.style.zIndex = "";
+    });
+  } catch (e) {
+    console.error("closeAllModals error:", e);
+  }
+}
+// --- 新增結束 ---
 
 // Admin panel elements
 const tabButtons = document.querySelectorAll(".tab-btn");
@@ -712,26 +746,23 @@ function initializeDefaultSites() {
   saveSites();
 }
 
-// Show modal
+// Modal close buttons
+const closeButtons = document.querySelectorAll(".close-btn");
+
+// --- 新增：確保 modal 控制函式在事件綁定前可用 ---
 function showModal(modal) {
   try {
-    // Close all other modals first
+    // 先關閉其他 modal
     closeAllModals();
-
     if (!modal) return;
-
-    // Ensure modal is visible and above other elements
     modal.style.display = "flex";
     modal.style.zIndex = "10000";
-
-    // Ensure it can receive focus for accessibility
     if (!modal.hasAttribute("tabindex")) modal.setAttribute("tabindex", "-1");
-    // slight delay to allow layout then focus
     setTimeout(() => {
       try {
         modal.focus();
       } catch (e) {
-        // ignore focus errors
+        /* ignore */
       }
     }, 50);
   } catch (e) {
@@ -739,15 +770,18 @@ function showModal(modal) {
   }
 }
 
-// Close all modals
 function closeAllModals() {
-  const modals = document.querySelectorAll(".modal");
-  modals.forEach((modal) => {
-    modal.style.display = "none";
-    // 清除 z-index，避免殘留蓋住互動
-    modal.style.zIndex = "";
-  });
+  try {
+    const modals = document.querySelectorAll(".modal");
+    modals.forEach((modal) => {
+      modal.style.display = "none";
+      modal.style.zIndex = "";
+    });
+  } catch (e) {
+    console.error("closeAllModals error:", e);
+  }
 }
+// --- 新增結束 ---
 
 // 取代單純的 DOMContentLoaded 註冊，改為依 readyState 判斷
 if (document.readyState === "loading") {
