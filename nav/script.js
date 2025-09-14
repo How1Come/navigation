@@ -712,323 +712,49 @@ function initializeDefaultSites() {
   saveSites();
 }
 
-// Switch tab in admin panel
-function switchTab(e) {
-  // Remove active class from all tab buttons
-  tabButtons.forEach((btn) => btn.classList.remove("active"));
+// Show modal
+function showModal(modal) {
+  try {
+    // Close all other modals first
+    closeAllModals();
 
-  // Add active class to clicked tab button
-  e.target.classList.add("active");
+    if (!modal) return;
 
-  // Get tab id
-  const tabId = e.target.getAttribute("data-tab");
+    // Ensure modal is visible and above other elements
+    modal.style.display = "flex";
+    modal.style.zIndex = "10000";
 
-  // Hide all tab contents
-  tabContents.forEach((content) => {
-    content.style.display = "none";
-  });
-
-  // Show selected tab content
-  document.getElementById(`${tabId}Tab`).style.display = "block";
-}
-
-// Handle add site
-function handleAddSite(e) {
-  e.preventDefault();
-
-  // Get form values
-  const url = document.getElementById("siteUrl").value;
-  const name = document.getElementById("siteName").value;
-  const description = document.getElementById("siteDescription").value;
-  const category = document.getElementById("siteCategory").value;
-  const imageUrl =
-    document.getElementById("siteImage").value || `images/default.jpg`;
-  const isRestricted = document.getElementById("isRestricted").checked;
-
-  // Create site object
-  const site = {
-    id: Date.now().toString(),
-    url,
-    name,
-    description,
-    category,
-    imageUrl,
-    isRestricted,
-  };
-
-  // Add site to sites array
-  sites.push(site);
-
-  // Save sites to localStorage
-  saveSites();
-
-  // Add site to DOM
-  addSiteToDOM(site);
-
-  // Reset form
-  addSiteForm.reset();
-
-  // Update site selects
-  populateSiteSelects();
-
-  // Show success message
-  alert("网站添加成功！");
-}
-
-// Handle update site
-function handleUpdateSite(e) {
-  e.preventDefault();
-
-  // Get selected site id
-  const siteId = editSiteSelect.value;
-
-  // Find site in sites array
-  const siteIndex = sites.findIndex((site) => site.id === siteId);
-
-  if (siteIndex !== -1) {
-    // Get form values
-    const url = document.getElementById("editSiteUrl").value;
-    const name = document.getElementById("editSiteName").value;
-    const description = document.getElementById("editSiteDescription").value;
-    const category = document.getElementById("editSiteCategory").value;
-    const imageUrl =
-      document.getElementById("editSiteImage").value ||
-      sites[siteIndex].imageUrl;
-    const isRestricted = document.getElementById("editIsRestricted").checked;
-
-    // Update site object
-    sites[siteIndex] = {
-      ...sites[siteIndex],
-      url,
-      name,
-      description,
-      category,
-      imageUrl,
-      isRestricted,
-    };
-
-    // Save sites to localStorage
-    saveSites();
-
-    // Update DOM
-    updateSitesDOM();
-
-    // Update site selects
-    populateSiteSelects();
-
-    // Show success message
-    alert("网站更新成功！");
+    // Ensure it can receive focus for accessibility
+    if (!modal.hasAttribute("tabindex")) modal.setAttribute("tabindex", "-1");
+    // slight delay to allow layout then focus
+    setTimeout(() => {
+      try {
+        modal.focus();
+      } catch (e) {
+        // ignore focus errors
+      }
+    }, 50);
+  } catch (e) {
+    console.error("showModal error:", e);
   }
 }
 
-// Handle remove site
-function handleRemoveSite() {
-  // Get selected site id
-  const siteId = removeSiteSelect.value;
-
-  if (siteId) {
-    // Confirm deletion
-    if (confirm("确定要删除这个网站吗？")) {
-      // Remove site from sites array
-      sites = sites.filter((site) => site.id !== siteId);
-
-      // Save sites to localStorage
-      saveSites();
-
-      // Update DOM
-      updateSitesDOM();
-
-      // Update site selects
-      populateSiteSelects();
-
-      // Clear preview
-      removeSitePreview.innerHTML = "";
-
-      // Show success message
-      alert("网站删除成功！");
-    }
-  } else {
-    alert("请选择要删除的网站");
-  }
-}
-
-// Populate edit form
-function populateEditForm() {
-  // Get selected site id
-  const siteId = editSiteSelect.value;
-
-  // Find site in sites array
-  const site = sites.find((site) => site.id === siteId);
-
-  if (site) {
-    // Populate form fields
-    document.getElementById("editSiteUrl").value = site.url;
-    document.getElementById("editSiteName").value = site.name;
-    document.getElementById("editSiteDescription").value = site.description;
-    document.getElementById("editSiteCategory").value = site.category;
-    document.getElementById("editSiteImage").value = site.imageUrl;
-    document.getElementById("editIsRestricted").checked = site.isRestricted;
-  }
-}
-
-// Show site preview
-function showSitePreview() {
-  // Get selected site id
-  const siteId = removeSiteSelect.value;
-
-  // Find site in sites array
-  const site = sites.find((site) => site.id === siteId);
-
-  if (site) {
-    // Create preview HTML
-    removeSitePreview.innerHTML = `
-      <div class="preview-box">
-        <div class="preview-image">
-          <img src="${site.imageUrl}" alt="${site.name}">
-        </div>
-        <div class="preview-content">
-          <h3>${site.name}</h3>
-          <p>${site.description}</p>
-          <p class="preview-url">${site.url}</p>
-          <p class="preview-category">分类: ${site.category}</p>
-          ${
-            site.isRestricted
-              ? '<p class="preview-restricted">限制访问</p>'
-              : ""
-          }
-        </div>
-      </div>
-    `;
-  } else {
-    removeSitePreview.innerHTML = "";
-  }
-}
-
-// Add site to DOM
-function addSiteToDOM(site) {
-  // Create site element
-  const siteElement = document.createElement("div");
-  siteElement.className = `box ${site.category}`;
-  siteElement.dataset.id = site.id;
-
-  if (site.isRestricted) {
-    siteElement.classList.add("warn");
-  }
-
-  // Set site HTML
-  siteElement.innerHTML = `
-    <a href="${site.url}" target="_blank">
-      <div class="box-image">
-        <img src="${site.imageUrl}" alt="${site.name}">
-      </div>
-      <div class="box-content">
-        <h2>${site.name}</h2>
-        <p>${site.description}</p>
-      </div>
-    </a>
-  `;
-
-  // Append and then store original src for future還原
-  sitesContainer.appendChild(siteElement);
-  const img = siteElement.querySelector("img");
-  if (img && !img.dataset.originalSrc) img.dataset.originalSrc = img.src;
-
-  // 如果目前 specialVisuals 已啟用，立即用特殊封面替換
-  if (specialVisuals) {
-    const boxes = Array.from(document.querySelectorAll(".box"));
-    const idx = boxes.indexOf(siteElement);
-    if (img) img.src = `simages/s${idx + 1}.jpg`;
-  }
-}
-
-// Update sites in DOM
-function updateSitesDOM() {
-  // Clear container
-  sitesContainer.innerHTML = "";
-
-  // Add all sites to DOM
-  sites.forEach((site) => {
-    addSiteToDOM(site);
+// Close all modals
+function closeAllModals() {
+  const modals = document.querySelectorAll(".modal");
+  modals.forEach((modal) => {
+    modal.style.display = "none";
+    // 清除 z-index，避免殘留蓋住互動
+    modal.style.zIndex = "";
   });
 }
 
-// Populate site selects
-function populateSiteSelects() {
-  // Clear selects
-  editSiteSelect.innerHTML = '<option value="">选择网站...</option>';
-  removeSiteSelect.innerHTML = '<option value="">选择网站...</option>';
-
-  // Add sites to selects
-  sites.forEach((site) => {
-    const option = document.createElement("option");
-    option.value = site.id;
-    option.textContent = site.name;
-
-    // Add to edit select
-    editSiteSelect.appendChild(option.cloneNode(true));
-
-    // Add to remove select
-    removeSiteSelect.appendChild(option);
-  });
-}
-
-// Save sites to localStorage
-function saveSites() {
-  localStorage.setItem("sites", JSON.stringify(sites));
-}
-
-// Load sites from localStorage
-function loadSites() {
-  // Get sites from localStorage
-  const savedSites = localStorage.getItem("sites");
-
-  if (savedSites) {
-    // Parse saved sites
-    sites = JSON.parse(savedSites);
-
-    // Add sites to DOM
-    updateSitesDOM();
-  } else {
-    // Initialize sites array with default sites
-    initializeDefaultSites();
-  }
-}
-
-// Initialize default sites
-function initializeDefaultSites() {
-  // Get all site boxes from DOM
-  const boxes = document.querySelectorAll(".box");
-
-  // Create site objects from boxes
-  boxes.forEach((box, index) => {
-    const link = box.querySelector("a");
-    const img = box.querySelector("img");
-    const title = box.querySelector("h2");
-    const description = box.querySelector("p");
-
-    // Get category from class
-    const categoryClasses = Array.from(box.classList).filter(
-      (cls) => cls !== "box" && cls !== "warn"
-    );
-    const category = categoryClasses.length > 0 ? categoryClasses[0] : "其他";
-
-    // Create site object
-    const site = {
-      id: `default-${index}`,
-      url: link.href,
-      name: title.textContent,
-      description: description.textContent,
-      category,
-      imageUrl: img.src,
-      isRestricted: box.classList.contains("warn"),
-    };
-
-    // Add to sites array
-    sites.push(site);
-  });
-
-  // Save sites to localStorage
-  saveSites();
+// 取代單純的 DOMContentLoaded 註冊，改為依 readyState 判斷
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", init);
+} else {
+  // DOM 已就緒，立即初始化
+  init();
 }
 
 // Show password prompt
