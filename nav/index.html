@@ -24,7 +24,6 @@
       <nav class="header-nav">
         <ul id="navList">
           <li><a href="#" class="active"><i class="fas fa-home"></i> 主页</a></li>
-          <li><a href="#" id="settingsBtn"><i class="fas fa-cog"></i> 设置</a></li>
           <li><a href="#" id="loginToggle"><i class="fas fa-user-shield"></i> 登录</a></li>
         </ul>
       </nav>
@@ -221,27 +220,6 @@
       </div>
     </div>
 
-    <!-- 设置 -->
-    <div class="modal modal-overlay" id="settingsModal">
-      <div class="modal-card">
-        <div class="modal-card__head">
-          <h3 class="modal-card__title"><i class="fas fa-cog"></i> 设置</h3>
-          <button type="button" class="close-btn modal-card__close" aria-label="关闭">&times;</button>
-        </div>
-        <div class="modal-card__body">
-          <div class="settings-item">
-            <span class="settings-label">显示受限网站</span>
-            <button id="toggleWarnBtn" class="btn btn--secondary btn--sm" type="button">顯示受限網站</button>
-          </div>
-          <label class="settings-item settings-item--toggle">
-            <span class="settings-label">特殊封面 / 背景</span>
-            <input type="checkbox" id="visualsToggle" class="toggle-input" />
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
-      </div>
-    </div>
-
     <!-- 管理员登录 -->
     <div class="modal modal-overlay" id="loginModal">
       <div class="modal-card modal-card--narrow">
@@ -276,6 +254,17 @@
           </div>
         </div>
         <div class="modal-card__body admin-panel__body">
+          <div class="admin-controls">
+            <div class="admin-controls__item">
+              <span class="admin-controls__label">显示受限网站</span>
+              <button id="toggleWarnBtn" class="btn btn--secondary btn--sm" type="button">顯示受限網站</button>
+            </div>
+            <label class="admin-controls__item admin-controls__toggle">
+              <span class="admin-controls__label">特殊封面 / 背景</span>
+              <input type="checkbox" id="visualsToggle" class="toggle-input" />
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
           <div class="tabs">
             <button type="button" class="tab-btn active" data-tab="add">添加</button>
             <button type="button" class="tab-btn" data-tab="edit">编辑</button>

@@ -48,3 +48,10 @@ If you don’t deploy it, the nav page keeps using only `localStorage`.
 - **POST /sites** – Header `Authorization: Bearer <token>`, body `{ sites: [...] }`. Writes the list to KV. Returns 401 if token missing or expired.
 
 Token expiry is 24 hours. The nav page requests a new token when the admin logs in.
+
+## Cover images
+
+Each site in the list can have `imageUrl` (normal cover) and `specialImageUrl` (special cover when “特殊封面/背景” is on). These are synced with the rest of the site data:
+
+- **External URLs** (e.g. `https://example.com/cover.jpg`) are stored as-is and work best for cross-device sync.
+- **Data URLs** (base64 from drag-and-drop upload) are stored in KV too; they work but can be large, so prefer external image links when possible.

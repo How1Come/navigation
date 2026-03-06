@@ -9,11 +9,9 @@ const sidebar = document.getElementById("sidebar");
 const categoryLinks = document.querySelectorAll(".category-list li a");
 const sitesContainer = document.getElementById("sitesContainer");
 const loginToggle = document.getElementById("loginToggle");
-const settingsBtn = document.getElementById("settingsBtn");
 
 // Modals
 const passwordModal = document.getElementById("passwordModal");
-const settingsModal = document.getElementById("settingsModal");
 const loginModal = document.getElementById("loginModal");
 const adminModal = document.getElementById("adminModal");
 const closeButtons = document.querySelectorAll(".close-btn");
@@ -84,8 +82,14 @@ function init() {
       if (!img.dataset.originalSrc) img.dataset.originalSrc = img.src;
     });
 
-    showWarn = localStorage.getItem("showWarn") === "true";
-    specialVisuals = localStorage.getItem("specialVisuals") === "true";
+    // Only admin can see restricted sites and special visuals; foreigners cannot
+    if (sessionStorage.getItem("adminSession") === "1") {
+      showWarn = localStorage.getItem("showWarn") === "true";
+      specialVisuals = localStorage.getItem("specialVisuals") === "true";
+    } else {
+      showWarn = false;
+      specialVisuals = false;
+    }
 
     if (toggleWarnBtn) {
       toggleWarnBtn.textContent = showWarn ? "隱藏受限網站" : "顯示受限網站";
@@ -151,12 +155,6 @@ function addEventListeners() {
     });
   }
 
-  if (settingsBtn) {
-    settingsBtn.addEventListener("click", function (e) {
-      e.preventDefault();
-      showModal(settingsModal);
-    });
-  }
   if (loginToggle) {
     loginToggle.addEventListener("click", function (e) {
       if (e && typeof e.preventDefault === "function") e.preventDefault();
@@ -740,13 +738,16 @@ function fetchSitesFromCloud() {
     .then((r) => (r.ok ? r.json() : Promise.reject()))
     .then((data) => {
       const list = data.sites != null ? data.sites : data;
-      if (Array.isArray(list) && list.length >= 0) {
-        sites = list;
-        updateSitesDOM();
-        saveSites(); // cache to localStorage
+      if (!Array.isArray(list)) return Promise.reject();
+      if (list.length === 0) {
+        // Cloud empty: use localStorage or DOM defaults so page is not blank
+        loadSites();
         return true;
       }
-      return Promise.reject();
+      sites = list;
+      updateSitesDOM();
+      saveSites(); // cache to localStorage
+      return true;
     });
 }
 
@@ -1120,8 +1121,8 @@ function fixBackgroundVideo() {
 
 // 管理員登入
 async function handleLogin() {
-  const username = document.getElementById("username")?.value || "";
-  const password = document.getElementById("password")?.value || "";
+  const username = (document.getElementById("username")?.value || "").trim();
+  const password = (document.getElementById("password")?.value || "").trim();
 
   if (username !== "admin" || password !== "howcome") {
     alert("用户名或密码错误");
@@ -1141,6 +1142,8 @@ async function handleLogin() {
       const data = await r.json();
       if (data.token) sessionStorage.setItem("adminToken", data.token);
     } catch (_) {}
+    // Push current sites to cloud so cloud has existing data (e.g. after first deploy)
+    syncSitesToCloud();
   }
 
   closeAllModals();

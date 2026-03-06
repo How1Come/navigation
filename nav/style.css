@@ -58,10 +58,12 @@ body {
 }
 
 .site-header.liquid-glass {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+  backdrop-filter: blur(22px) saturate(200%);
+  -webkit-backdrop-filter: blur(22px) saturate(200%);
+  border-bottom: 1.5px solid rgba(255, 255, 255, 0.1);
+  transition: background 0.5s, backdrop-filter 0.5s;
 }
 
 .logo {
@@ -172,10 +174,12 @@ body {
 }
 
 .sidebar.liquid-glass {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-right: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.03);
+  backdrop-filter: blur(22px) saturate(200%);
+  -webkit-backdrop-filter: blur(22px) saturate(200%);
+  border-right: 1.5px solid rgba(255, 255, 255, 0.1);
+  transition: background 0.5s, backdrop-filter 0.5s;
 }
 
 .sidebar-header {
@@ -627,6 +631,31 @@ main {
 
 .admin-panel__body {
   padding-top: 1rem;
+}
+
+.admin-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.admin-controls__item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.admin-controls__label {
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+.admin-controls__toggle {
+  cursor: pointer;
 }
 
 .tabs {
