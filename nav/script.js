@@ -462,12 +462,12 @@ function switchTab(e) {
 function handleAddSite(e) {
   e.preventDefault();
 
-  const url = document.getElementById("siteUrl").value;
-  const name = document.getElementById("siteName").value;
-  const description = document.getElementById("siteDescription").value;
-  const category = document.getElementById("siteCategory").value;
+  const url = document.getElementById("siteUrl").value.trim();
+  const name = document.getElementById("siteName").value.trim();
+  const description = document.getElementById("siteDescription").value.trim();
+  const category = document.getElementById("siteCategory").value.trim();
   const imageUrl =
-    document.getElementById("siteImage").value || `images/default.jpg`;
+    document.getElementById("siteImage").value.trim() || `images/default.jpg`;
   const specialImageUrl = document.getElementById("siteSpecialImage").value.trim() || undefined;
   const isRestricted = document.getElementById("isRestricted").checked;
 
@@ -506,12 +506,12 @@ function handleUpdateSite(e) {
   const siteIndex = sites.findIndex((site) => site.id === siteId);
 
   if (siteIndex !== -1) {
-    const url = document.getElementById("editSiteUrl").value;
-    const name = document.getElementById("editSiteName").value;
-    const description = document.getElementById("editSiteDescription").value;
-    const category = document.getElementById("editSiteCategory").value;
+    const url = document.getElementById("editSiteUrl").value.trim();
+    const name = document.getElementById("editSiteName").value.trim();
+    const description = document.getElementById("editSiteDescription").value.trim();
+    const category = document.getElementById("editSiteCategory").value.trim();
     const imageUrl =
-      document.getElementById("editSiteImage").value ||
+      document.getElementById("editSiteImage").value.trim() ||
       sites[siteIndex].imageUrl;
     const specialImageUrl = document.getElementById("editSiteSpecialImage").value.trim() || undefined;
     const isRestricted = document.getElementById("editIsRestricted").checked;
@@ -597,33 +597,40 @@ function showSitePreview() {
   const site = sites.find((site) => site.id === siteId);
 
   if (site) {
-    // Create preview HTML
     removeSitePreview.innerHTML = `
       <div class="preview-box">
         <div class="preview-image">
-          <img src="${site.imageUrl}" alt="${site.name}">
+          <img src="" alt="${escapeHtml(site.name)}">
         </div>
         <div class="preview-content">
-          <h3>${site.name}</h3>
-          <p>${site.description}</p>
-          <p class="preview-url">${site.url}</p>
-          <p class="preview-category">分类: ${site.category}</p>
-          ${
-            site.isRestricted
-              ? '<p class="preview-restricted">限制访问</p>'
-              : ""
-          }
+          <h3>${escapeHtml(site.name)}</h3>
+          <p>${escapeHtml(site.description)}</p>
+          <p class="preview-url">${escapeHtml(site.url)}</p>
+          <p class="preview-category">分类: ${escapeHtml(site.category)}</p>
+          ${site.isRestricted ? '<p class="preview-restricted">限制访问</p>' : ""}
         </div>
       </div>
     `;
+    const previewImg = removeSitePreview.querySelector(".preview-image img");
+    if (previewImg && site.imageUrl) previewImg.src = (site.imageUrl || "").trim();
   } else {
     removeSitePreview.innerHTML = "";
   }
 }
 
+// Escape for HTML text/attributes to avoid breakage and XSS
+function escapeHtml(s) {
+  if (s == null) return "";
+  const t = String(s);
+  return t
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
 // Add site to DOM
 function addSiteToDOM(site) {
-  // Create site element
   const siteElement = document.createElement("div");
   siteElement.className = `box ${site.category}`;
   siteElement.dataset.id = site.id;
@@ -632,29 +639,32 @@ function addSiteToDOM(site) {
     siteElement.classList.add("warn");
   }
 
-  // Set site HTML
+  // Build HTML with escaped text; set img src in JS so URL works (no quote/ampersand breakage)
+  const imageUrl = (site.imageUrl || "").trim();
   siteElement.innerHTML = `
-    <a href="${site.url}" target="_blank">
+    <a href="${escapeHtml(site.url)}" target="_blank" rel="noopener noreferrer">
       <div class="box-image">
-        <img src="${site.imageUrl}" alt="${site.name}">
+        <img src="" alt="${escapeHtml(site.name)}">
       </div>
       <div class="box-content">
-        <h2>${site.name}</h2>
-        <p>${site.description}</p>
+        <h2>${escapeHtml(site.name)}</h2>
+        <p>${escapeHtml(site.description)}</p>
       </div>
     </a>
   `;
 
-  // Append and then store original src for future還原
-  sitesContainer.appendChild(siteElement);
   const img = siteElement.querySelector("img");
-  if (img && !img.dataset.originalSrc) img.dataset.originalSrc = img.src;
+  if (img) {
+    img.src = imageUrl || "images/default.jpg";
+    if (!img.dataset.originalSrc) img.dataset.originalSrc = img.src;
+  }
 
-  // 如果目前 specialVisuals 已啟用，立即用特殊封面替換
-  if (specialVisuals) {
+  sitesContainer.appendChild(siteElement);
+
+  if (specialVisuals && img) {
     const boxes = Array.from(document.querySelectorAll(".box"));
     const idx = boxes.indexOf(siteElement);
-    if (img) img.src = `simages/s${idx + 1}.jpg`;
+    img.src = `simages/s${idx + 1}.jpg`;
   }
 }
 
