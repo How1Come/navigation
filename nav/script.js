@@ -1,3 +1,6 @@
+// Cloudflare Worker API (set to your Worker URL, or '' to use only localStorage)
+const API_BASE = " https://nav-sites-sync.sujimmy666666.workers.dev"; // e.g. "https://nav-sites.xxx.workers.dev"
+
 // DOM Elements
 const navList = document.getElementById("navList");
 const navItems = navList.querySelectorAll("li a");
@@ -12,9 +15,7 @@ const contactBtn = document.getElementById("contactBtn");
 const passwordModal = document.getElementById("passwordModal");
 const loginModal = document.getElementById("loginModal");
 const adminModal = document.getElementById("adminModal");
-
-// Modal close buttons
-// const closeButtons = document.querySelectorAll(".close-btn"); // Duplicate declaration removed
+const closeButtons = document.querySelectorAll(".close-btn");
 
 // --- 新增：確保 modal 控制函式在事件綁定前可用 ---
 function showModal(modal) {
@@ -73,42 +74,32 @@ const visualsToggle = document.getElementById("visualsToggle");
 
 // Initialize the application
 function init() {
-  console.log("init() called"); // 除錯用，可移除
-  // Load sites from localStorage
-  loadSites();
+  // Load sites: try Cloudflare first, then localStorage
+  fetchSitesFromCloud().catch(loadSites).then(function () {
+    addEventListeners();
+    populateSiteSelects();
 
-  // Add event listeners
-  addEventListeners();
+    document.querySelectorAll(".box img").forEach((img) => {
+      if (!img.dataset.originalSrc) img.dataset.originalSrc = img.src;
+    });
 
-  // Populate site selects
-  populateSiteSelects();
+    showWarn = localStorage.getItem("showWarn") === "true";
+    specialVisuals = localStorage.getItem("specialVisuals") === "true";
 
-  // 儲存每個 box 原始圖片來源（用於還原）
-  document.querySelectorAll(".box img").forEach((img) => {
-    if (!img.dataset.originalSrc) img.dataset.originalSrc = img.src;
+    if (toggleWarnBtn) {
+      toggleWarnBtn.textContent = showWarn ? "隱藏受限網站" : "顯示受限網站";
+    }
+    if (visualsToggle) visualsToggle.checked = specialVisuals;
+
+    applyWarnVisibility(showWarn);
+    applySpecialVisuals(specialVisuals);
+
+    initImageUploadAndCategories();
+    fixBackgroundVideo();
+
+    sitesContainer.style.display = "none";
+    showModal(passwordModal);
   });
-
-  // 從 localStorage 載入之前的狀態
-  showWarn = localStorage.getItem("showWarn") === "true";
-  specialVisuals = localStorage.getItem("specialVisuals") === "true";
-
-  // 套用狀態 UI（按鈕文字 / checkbox）
-  if (toggleWarnBtn) {
-    toggleWarnBtn.textContent = showWarn ? "隱藏受限網站" : "顯示受限網站";
-  }
-  if (visualsToggle) visualsToggle.checked = specialVisuals;
-
-  // 依狀態套用畫面
-  applyWarnVisibility(showWarn);
-  applySpecialVisuals(specialVisuals);
-
-  // 初始化新功能
-  initImageUploadAndCategories();
-  fixBackgroundVideo();
-
-  // 預設為隱藏內容，需正確密碼才能看（若你之前已設計此行，保留）
-  sitesContainer.style.display = "none";
-  showModal(passwordModal);
 }
 
 // Add event listeners
@@ -172,7 +163,24 @@ function addEventListeners() {
   if (loginToggle) {
     loginToggle.addEventListener("click", function (e) {
       if (e && typeof e.preventDefault === "function") e.preventDefault();
+      // If already logged in this session, open admin panel directly
+      if (sessionStorage.getItem("adminSession") === "1") {
+        showModal(adminModal);
+        populateSiteSelects();
+        return;
+      }
       showModal(loginModal);
+    });
+  }
+
+  // Exit admin (clear session, close panel)
+  const exitAdminBtn = document.getElementById("exitAdminBtn");
+  if (exitAdminBtn) {
+    exitAdminBtn.addEventListener("click", function () {
+      sessionStorage.removeItem("adminSession");
+      sessionStorage.removeItem("adminToken");
+      isAdmin = false;
+      closeAllModals();
     });
   }
 
@@ -338,22 +346,21 @@ function applyWarnVisibility(show) {
 
 // Apply or revert special visuals (封面與背景)
 function applySpecialVisuals(enabled) {
-  // 圖片替換：使用每個 img.dataset.originalSrc 作為還原來源
   const boxes = document.querySelectorAll(".box");
   boxes.forEach((box, index) => {
     const img = box.querySelector("img");
     if (!img) return;
 
     if (enabled) {
-      // 儲存原始如果尚未儲存
       if (!img.dataset.originalSrc) img.dataset.originalSrc = img.src;
-      img.src = `simages/s${index + 1}.jpg`;
+      // Prefer per-site special cover if set, else fallback to simages/sN.jpg
+      const id = box.dataset.id;
+      const site = id ? sites.find((s) => s.id === id) : null;
+      img.src = (site && site.specialImageUrl) ? site.specialImageUrl : `simages/s${index + 1}.jpg`;
     } else {
-      // 還原原圖
       if (img.dataset.originalSrc) {
         img.src = img.dataset.originalSrc;
       } else {
-        // 嘗試由 sites 資料還原（若存在 id）
         const id = box.dataset.id;
         if (id) {
           const site = sites.find((s) => s.id === id);
@@ -455,16 +462,15 @@ function switchTab(e) {
 function handleAddSite(e) {
   e.preventDefault();
 
-  // Get form values
   const url = document.getElementById("siteUrl").value;
   const name = document.getElementById("siteName").value;
   const description = document.getElementById("siteDescription").value;
   const category = document.getElementById("siteCategory").value;
   const imageUrl =
     document.getElementById("siteImage").value || `images/default.jpg`;
+  const specialImageUrl = document.getElementById("siteSpecialImage").value.trim() || undefined;
   const isRestricted = document.getElementById("isRestricted").checked;
 
-  // Create site object
   const site = {
     id: Date.now().toString(),
     url,
@@ -472,25 +478,20 @@ function handleAddSite(e) {
     description,
     category,
     imageUrl,
+    specialImageUrl: specialImageUrl || undefined,
     isRestricted,
   };
 
-  // Add site to sites array
   sites.push(site);
-
-  // Save sites to localStorage
   saveSites();
-
-  // Add site to DOM
+  syncSitesToCloud();
   addSiteToDOM(site);
 
-  // Reset form
   addSiteForm.reset();
-
-  // Update site selects
+  document.getElementById("siteSpecialImage").value = "";
+  const specialPreview = document.getElementById("specialImagePreview");
+  if (specialPreview) { specialPreview.innerHTML = ""; specialPreview.style.display = "none"; }
   populateSiteSelects();
-
-  // Show success message
   alert("网站添加成功！");
 }
 
@@ -505,7 +506,6 @@ function handleUpdateSite(e) {
   const siteIndex = sites.findIndex((site) => site.id === siteId);
 
   if (siteIndex !== -1) {
-    // Get form values
     const url = document.getElementById("editSiteUrl").value;
     const name = document.getElementById("editSiteName").value;
     const description = document.getElementById("editSiteDescription").value;
@@ -513,9 +513,9 @@ function handleUpdateSite(e) {
     const imageUrl =
       document.getElementById("editSiteImage").value ||
       sites[siteIndex].imageUrl;
+    const specialImageUrl = document.getElementById("editSiteSpecialImage").value.trim() || undefined;
     const isRestricted = document.getElementById("editIsRestricted").checked;
 
-    // Update site object
     sites[siteIndex] = {
       ...sites[siteIndex],
       url,
@@ -523,19 +523,14 @@ function handleUpdateSite(e) {
       description,
       category,
       imageUrl,
+      specialImageUrl: specialImageUrl || undefined,
       isRestricted,
     };
 
-    // Save sites to localStorage
     saveSites();
-
-    // Update DOM
+    syncSitesToCloud();
     updateSitesDOM();
-
-    // Update site selects
     populateSiteSelects();
-
-    // Show success message
     alert("网站更新成功！");
   }
 }
@@ -548,13 +543,9 @@ function handleRemoveSite() {
   if (siteId) {
     // Confirm deletion
     if (confirm("确定要删除这个网站吗？")) {
-      // Remove site from sites array
       sites = sites.filter((site) => site.id !== siteId);
-
-      // Save sites to localStorage
       saveSites();
-
-      // Update DOM
+      syncSitesToCloud();
       updateSitesDOM();
 
       // Update site selects
@@ -580,13 +571,20 @@ function populateEditForm() {
   const site = sites.find((site) => site.id === siteId);
 
   if (site) {
-    // Populate form fields
     document.getElementById("editSiteUrl").value = site.url;
     document.getElementById("editSiteName").value = site.name;
     document.getElementById("editSiteDescription").value = site.description;
     document.getElementById("editSiteCategory").value = site.category;
-    document.getElementById("editSiteImage").value = site.imageUrl;
+    document.getElementById("editSiteImage").value = site.imageUrl || "";
+    document.getElementById("editSiteSpecialImage").value = site.specialImageUrl || "";
     document.getElementById("editIsRestricted").checked = site.isRestricted;
+    const editSpecialPreview = document.getElementById("editSpecialImagePreview");
+    if (editSpecialPreview) {
+      editSpecialPreview.innerHTML = site.specialImageUrl
+        ? `<img src="${site.specialImageUrl}" alt="特殊封面">`
+        : "";
+      editSpecialPreview.style.display = site.specialImageUrl ? "block" : "none";
+    }
   }
 }
 
@@ -691,26 +689,63 @@ function populateSiteSelects() {
   });
 }
 
-// Save sites to localStorage
+// Save sites to localStorage (and optionally sync to Cloudflare)
 function saveSites() {
   localStorage.setItem("sites", JSON.stringify(sites));
 }
 
+// Sync sites to Cloudflare Worker (no-op if API_BASE empty or no token)
+function syncSitesToCloud() {
+  if (!API_BASE) return;
+  const token = sessionStorage.getItem("adminToken");
+  if (!token) return;
+
+  fetch(API_BASE + "/sites", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + token,
+    },
+    body: JSON.stringify({ sites }),
+  })
+    .then((r) => {
+      if (r.status === 401) {
+        sessionStorage.removeItem("adminToken");
+        sessionStorage.removeItem("adminSession");
+        isAdmin = false;
+        alert("登入已過期，請重新登入");
+      }
+    })
+    .catch(() => {});
+}
+
 // Load sites from localStorage
 function loadSites() {
-  // Get sites from localStorage
   const savedSites = localStorage.getItem("sites");
 
   if (savedSites) {
-    // Parse saved sites
     sites = JSON.parse(savedSites);
-
-    // Add sites to DOM
     updateSitesDOM();
   } else {
-    // Initialize sites array with default sites
     initializeDefaultSites();
   }
+}
+
+// Fetch sites from Cloudflare (used on init)
+function fetchSitesFromCloud() {
+  if (!API_BASE) return Promise.reject();
+  return fetch(API_BASE + "/sites")
+    .then((r) => (r.ok ? r.json() : Promise.reject()))
+    .then((data) => {
+      const list = data.sites != null ? data.sites : data;
+      if (Array.isArray(list) && list.length >= 0) {
+        sites = list;
+        updateSitesDOM();
+        saveSites(); // cache to localStorage
+        return true;
+      }
+      return Promise.reject();
+    });
 }
 
 // Initialize default sites
@@ -746,52 +781,13 @@ function initializeDefaultSites() {
     sites.push(site);
   });
 
-  // Save sites to localStorage
   saveSites();
 }
-
-// Modal close buttons
-const closeButtons = document.querySelectorAll(".close-btn");
-
-// --- 新增：確保 modal 控制函式在事件綁定前可用 ---
-function showModal(modal) {
-  try {
-    // 先關閉其他 modal
-    closeAllModals();
-    if (!modal) return;
-    modal.style.display = "flex";
-    modal.style.zIndex = "10000";
-    if (!modal.hasAttribute("tabindex")) modal.setAttribute("tabindex", "-1");
-    setTimeout(() => {
-      try {
-        modal.focus();
-      } catch (e) {
-        /* ignore */
-      }
-    }, 50);
-  } catch (e) {
-    console.error("showModal error:", e);
-  }
-}
-
-function closeAllModals() {
-  try {
-    const modals = document.querySelectorAll(".modal");
-    modals.forEach((modal) => {
-      modal.style.display = "none";
-      modal.style.zIndex = "";
-    });
-  } catch (e) {
-    console.error("closeAllModals error:", e);
-  }
-}
-// --- 新增結束 ---
 
 // 取代單純的 DOMContentLoaded 註冊，改為依 readyState 判斷
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", init);
 } else {
-  // DOM 已就緒，立即初始化
   init();
 }
 
@@ -1078,7 +1074,6 @@ function loadCategories() {
 
 // 初始化拖放區域和分類功能
 function initImageUploadAndCategories() {
-  // 初始化拖放區域
   initDragArea(dragArea, fileInput, imagePreview, siteImageInput);
   initDragArea(
     editDragArea,
@@ -1087,14 +1082,27 @@ function initImageUploadAndCategories() {
     editSiteImageInput
   );
 
-  // 初始化添加分類功能
+  // 特殊封面拖放區域（添加 / 編輯）
+  const specialDragArea = document.getElementById("specialDragArea");
+  const specialFileInput = document.getElementById("specialFileInput");
+  const specialImagePreview = document.getElementById("specialImagePreview");
+  const siteSpecialImageInput = document.getElementById("siteSpecialImage");
+  if (specialDragArea && specialFileInput && specialImagePreview && siteSpecialImageInput) {
+    initDragArea(specialDragArea, specialFileInput, specialImagePreview, siteSpecialImageInput);
+  }
+  const editSpecialDragArea = document.getElementById("editSpecialDragArea");
+  const editSpecialFileInput = document.getElementById("editSpecialFileInput");
+  const editSpecialImagePreview = document.getElementById("editSpecialImagePreview");
+  const editSiteSpecialImageInput = document.getElementById("editSiteSpecialImage");
+  if (editSpecialDragArea && editSpecialFileInput && editSpecialImagePreview && editSiteSpecialImageInput) {
+    initDragArea(editSpecialDragArea, editSpecialFileInput, editSpecialImagePreview, editSiteSpecialImageInput);
+  }
+
   setupAddCategory(addCategoryBtn, document.getElementById("siteCategory"));
   setupAddCategory(
     editAddCategoryBtn,
     document.getElementById("editSiteCategory")
   );
-
-  // 加載保存的分類
   loadCategories();
 }
 
@@ -1108,75 +1116,36 @@ function fixBackgroundVideo() {
   }
 }
 
-// 初始化應用程式
-function init() {
-  console.log("init() called"); // 除錯用，可移除
-  // Load sites from localStorage
-  loadSites();
-
-  // Add event listeners
-  addEventListeners();
-
-  // Populate site selects
-  populateSiteSelects();
-
-  // 儲存每個 box 原始圖片來源（用於還原）
-  document.querySelectorAll(".box img").forEach((img) => {
-    if (!img.dataset.originalSrc) img.dataset.originalSrc = img.src;
-  });
-
-  // 從 localStorage 載入之前的狀態
-  showWarn = localStorage.getItem("showWarn") === "true";
-  specialVisuals = localStorage.getItem("specialVisuals") === "true";
-
-  // 套用狀態 UI（按鈕文字 / checkbox）
-  if (toggleWarnBtn) {
-    toggleWarnBtn.textContent = showWarn ? "隱藏受限網站" : "顯示受限網站";
-  }
-  if (visualsToggle) visualsToggle.checked = specialVisuals;
-
-  // 依狀態套用畫面
-  applyWarnVisibility(showWarn);
-  applySpecialVisuals(specialVisuals);
-
-  // 初始化新功能
-  initImageUploadAndCategories();
-  fixBackgroundVideo();
-
-  // 預設為隱藏內容，需正確密碼才能看（若你之前已設計此行，保留）
-  sitesContainer.style.display = "none";
-  showModal(passwordModal);
-}
-
-// 取代單純的 DOMContentLoaded 註冊，改為依 readyState 判斷
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", init);
-} else {
-  // DOM 已就緒，立即初始化
-  init();
-}
-
-// 新增：處理管理員登入（避免 ReferenceError）
-function handleLogin() {
+// 管理員登入
+async function handleLogin() {
   const username = document.getElementById("username")?.value || "";
   const password = document.getElementById("password")?.value || "";
 
-  if (username === "admin" && password === "howcome") {
-    isAdmin = true;
-    // 關閉其他 modal 並開啟 admin 管理面板
-    closeAllModals();
-    showModal(adminModal);
-
-    // 更新站點選單以確保最新
-    populateSiteSelects();
-
-    // 若管理者登入，根據 showWarn 顯示受限網站（預設 showWarn 為 localStorage 的值）
-    document.querySelectorAll(".box.warn").forEach((box) => {
-      box.style.display = showWarn ? "block" : "none";
-    });
-
-    alert("管理員登入成功");
-  } else {
+  if (username !== "admin" || password !== "howcome") {
     alert("用户名或密码错误");
+    return;
   }
+
+  isAdmin = true;
+  sessionStorage.setItem("adminSession", "1");
+
+  if (API_BASE) {
+    try {
+      const r = await fetch(API_BASE + "/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
+      const data = await r.json();
+      if (data.token) sessionStorage.setItem("adminToken", data.token);
+    } catch (_) {}
+  }
+
+  closeAllModals();
+  showModal(adminModal);
+  populateSiteSelects();
+  document.querySelectorAll(".box.warn").forEach((box) => {
+    box.style.display = showWarn ? "block" : "none";
+  });
+  alert("管理員登入成功");
 }

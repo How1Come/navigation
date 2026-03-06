@@ -1,0 +1,9 @@
+name = "nav-sites-sync"
+main = "src/index.js"
+compatibility_date = "2024-01-01"
+
+# Create with: npx wrangler kv namespace create SITES
+# Then paste the returned id below.
+[[kv_namespaces]]
+binding = "SITES"
+id = "64b140268ed54488b1f6b06c76f430c5"

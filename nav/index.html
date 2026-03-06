@@ -253,6 +253,7 @@
     <div class="modal" id="adminModal">
       <div class="modal-content admin-panel">
         <span class="close-btn">&times;</span>
+        <button type="button" id="exitAdminBtn" class="btn secondary-btn" style="position:absolute; top:1rem; right:3rem;">退出管理</button>
         <h3>网站管理</h3>
 
         <div class="tabs">
@@ -318,7 +319,7 @@
               </div>
             </div>
             <div class="form-group">
-              <label for="siteImage">图片</label>
+              <label for="siteImage">图片（普通封面）</label>
               <div class="image-upload-container">
                 <input type="text" id="siteImage" placeholder="图片链接" />
                 <div class="drag-area" id="dragArea">
@@ -329,6 +330,20 @@
                   <input type="file" id="fileInput" hidden accept="image/*" />
                 </div>
                 <div class="image-preview" id="imagePreview"></div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="siteSpecialImage">特殊封面（選填，開啟「特殊封面/背景」時顯示）</label>
+              <div class="image-upload-container">
+                <input type="text" id="siteSpecialImage" placeholder="图片链接或留空" />
+                <div class="drag-area" id="specialDragArea">
+                  <div class="icon">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                  </div>
+                  <p>拖放图片或<span>点击上传</span></p>
+                  <input type="file" id="specialFileInput" hidden accept="image/*" />
+                </div>
+                <div class="image-preview" id="specialImagePreview"></div>
               </div>
             </div>
             <div class="form-group">
@@ -393,7 +408,7 @@
               </div>
             </div>
             <div class="form-group">
-              <label for="editSiteImage">图片</label>
+              <label for="editSiteImage">图片（普通封面）</label>
               <div class="image-upload-container">
                 <input type="text" id="editSiteImage" placeholder="图片链接" />
                 <div class="drag-area" id="editDragArea">
@@ -409,6 +424,20 @@
                   />
                 </div>
                 <div class="image-preview" id="editImagePreview"></div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="editSiteSpecialImage">特殊封面（選填）</label>
+              <div class="image-upload-container">
+                <input type="text" id="editSiteSpecialImage" placeholder="图片链接或留空" />
+                <div class="drag-area" id="editSpecialDragArea">
+                  <div class="icon">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                  </div>
+                  <p>拖放图片或<span>点击上传</span></p>
+                  <input type="file" id="editSpecialFileInput" hidden accept="image/*" />
+                </div>
+                <div class="image-preview" id="editSpecialImagePreview"></div>
               </div>
             </div>
             <div class="form-group">
