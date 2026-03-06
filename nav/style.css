@@ -335,8 +335,9 @@ main {
   align-items: center;
   justify-content: center;
   padding: 1rem;
-  background: rgba(15, 23, 42, 0.5);
-  backdrop-filter: blur(4px);
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   animation: fade-in 0.2s ease-out;
 }
 
@@ -350,6 +351,79 @@ main {
   overflow: hidden;
   animation: fade-in 0.25s ease-out;
   position: relative;
+}
+
+/* Liquid glass: password gate & admin panel (frosted glass) */
+.modal-card--gate,
+.modal-card.admin-panel {
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(22px) saturate(200%);
+  -webkit-backdrop-filter: blur(22px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.modal-card--gate .gate-title {
+  color: var(--text);
+}
+
+.modal-card--gate .gate-desc {
+  color: var(--text-muted);
+}
+
+.modal-card--gate .gate-input {
+  background: rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: var(--text);
+}
+
+.modal-card--gate .gate-input::placeholder {
+  color: var(--text-muted);
+}
+
+.modal-card--gate .gate-input:focus {
+  background: rgba(255, 255, 255, 0.35);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-subtle);
+}
+
+.modal-card.admin-panel .modal-card__head {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.modal-card.admin-panel .modal-card__title {
+  color: var(--text);
+}
+
+.modal-card.admin-panel .admin-controls,
+.modal-card.admin-panel .tabs {
+  border-bottom-color: rgba(255, 255, 255, 0.2);
+}
+
+.modal-card.admin-panel .form-group input,
+.modal-card.admin-panel .form-group select {
+  background: rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: var(--text);
+}
+
+.modal-card.admin-panel .form-group input::placeholder {
+  color: var(--text-muted);
+}
+
+.modal-card.admin-panel .form-group label {
+  color: var(--text);
+}
+
+.modal-card.admin-panel .drag-area {
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px dashed rgba(255, 255, 255, 0.5);
+}
+
+.modal-card.admin-panel .drag-area:hover,
+.modal-card.admin-panel .drag-area.active {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: var(--accent);
 }
 
 .modal-card--gate {
@@ -413,6 +487,12 @@ main {
 .close-btn:hover,
 .modal-card__close:hover {
   background: var(--bg);
+  color: var(--text);
+}
+
+.modal-card--gate .gate-close:hover,
+.modal-card.admin-panel .modal-card__close:hover {
+  background: rgba(255, 255, 255, 0.25);
   color: var(--text);
 }
 
