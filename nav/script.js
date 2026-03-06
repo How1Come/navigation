@@ -9,10 +9,11 @@ const sidebar = document.getElementById("sidebar");
 const categoryLinks = document.querySelectorAll(".category-list li a");
 const sitesContainer = document.getElementById("sitesContainer");
 const loginToggle = document.getElementById("loginToggle");
-const contactBtn = document.getElementById("contactBtn");
+const settingsBtn = document.getElementById("settingsBtn");
 
 // Modals
 const passwordModal = document.getElementById("passwordModal");
+const settingsModal = document.getElementById("settingsModal");
 const loginModal = document.getElementById("loginModal");
 const adminModal = document.getElementById("adminModal");
 const closeButtons = document.querySelectorAll(".close-btn");
@@ -115,29 +116,26 @@ function addEventListeners() {
   // Sidebar fold button
   document.getElementById("foldSidebarBtn").addEventListener("click", function() {
     sidebar.classList.toggle("folded");
-    // 切換圖標方向
     const icon = this.querySelector("i");
     if (sidebar.classList.contains("folded")) {
-      icon.classList.remove("fa-angle-left");
-      icon.classList.add("fa-angle-right");
+      icon.classList.remove("fa-chevron-left");
+      icon.classList.add("fa-chevron-right");
     } else {
-      icon.classList.remove("fa-angle-right");
-      icon.classList.add("fa-angle-left");
+      icon.classList.remove("fa-chevron-right");
+      icon.classList.add("fa-chevron-left");
     }
   });
 
-  // Header fold button
   document.getElementById("foldHeaderBtn").addEventListener("click", function() {
     const header = document.querySelector("header");
     header.classList.toggle("folded");
-    // 切換圖標方向
     const icon = this.querySelector("i");
     if (header.classList.contains("folded")) {
-      icon.classList.remove("fa-angle-up");
-      icon.classList.add("fa-angle-down");
+      icon.classList.remove("fa-chevron-up");
+      icon.classList.add("fa-chevron-down");
     } else {
-      icon.classList.remove("fa-angle-down");
-      icon.classList.add("fa-angle-up");
+      icon.classList.remove("fa-chevron-down");
+      icon.classList.add("fa-chevron-up");
     }
   });
 
@@ -153,11 +151,10 @@ function addEventListeners() {
     });
   }
 
-  // Modal triggers
-  if (contactBtn) {
-    contactBtn.addEventListener("click", function (e) {
-      if (e && typeof e.preventDefault === "function") e.preventDefault();
-      showModal(passwordModal);
+  if (settingsBtn) {
+    settingsBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      showModal(settingsModal);
     });
   }
   if (loginToggle) {
@@ -192,10 +189,15 @@ function addEventListeners() {
   // Admin login
   document.getElementById("loginBtn").addEventListener("click", handleLogin);
 
-  // Password verification
-  document
-    .getElementById("submitBtn")
-    .addEventListener("click", handlePasswordSubmit);
+  // Password verification (click and Enter)
+  document.getElementById("submitBtn").addEventListener("click", handlePasswordSubmit);
+  const passwordForm = document.getElementById("passwordForm");
+  if (passwordForm) {
+    passwordForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      handlePasswordSubmit();
+    });
+  }
 
   // Tab switching in admin panel
   tabButtons.forEach((btn) => {

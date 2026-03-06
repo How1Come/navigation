@@ -16,65 +16,40 @@
     />
   </head>
   <body>
-    <header>
+    <header class="site-header">
       <div class="logo">
+        <span class="logo-icon"><i class="fas fa-compass"></i></span>
         <h1>平平无奇的导航页</h1>
       </div>
-      <nav>
+      <nav class="header-nav">
         <ul id="navList">
-          <li>
-            <a href="#" class="active"><i class="fas fa-home"></i> 主页</a>
-          </li>
-          <li>
-            <a href="#"><i class="fas fa-info-circle"></i> 关于</a>
-          </li>
-          <li>
-            <a href="#" id="contactBtn"><i class="fas fa-envelope"></i> 联络</a>
-          </li>
-          <li>
-            <a href="#" id="loginToggle"><i class="fas fa-user"></i> 登录</a>
-          </li>
+          <li><a href="#" class="active"><i class="fas fa-home"></i> 主页</a></li>
+          <li><a href="#" id="settingsBtn"><i class="fas fa-cog"></i> 设置</a></li>
+          <li><a href="#" id="loginToggle"><i class="fas fa-user-shield"></i> 登录</a></li>
         </ul>
       </nav>
-      <div class="menu-toggle" id="sidebarIcon">
+      <button type="button" class="menu-toggle" id="sidebarIcon" aria-label="菜单">
         <i class="fas fa-bars"></i>
-      </div>
+      </button>
+      <button type="button" id="foldHeaderBtn" class="fold-btn fold-header-btn" title="收合導航欄" aria-label="收合">
+        <i class="fas fa-chevron-up"></i>
+      </button>
     </header>
-
-    <!-- 固定在畫面右上，避免被 header 收合隱藏 -->
-    <button id="foldHeaderBtn" title="收合導航欄"
-      style="position:fixed; top:10px; right:10px; z-index:9999; background:transparent; border:none; cursor:pointer;">
-      <i class="fas fa-angle-up"></i>
-    </button>
 
     <div class="main-content">
       <aside id="sidebar" class="sidebar">
-        <button
-          id="foldSidebarBtn"
-          title="收合侧边栏"
-          style="margin-bottom:10px;"
-        >
-          <i class="fas fa-angle-left"></i>
+        <button type="button" id="foldSidebarBtn" class="fold-btn fold-sidebar-btn" title="收合侧边栏" aria-label="收合侧边栏">
+          <i class="fas fa-chevron-left"></i>
         </button>
         <div class="sidebar-header">
-          <h3>分类</h3>
+          <span class="sidebar-label">分类</span>
         </div>
         <ul class="category-list">
-          <li>
-            <a href="#全部" class="active"><i class="fas fa-globe"></i> 全部</a>
-          </li>
-          <li>
-            <a href="#娱乐"><i class="fas fa-gamepad"></i> 娱乐</a>
-          </li>
-          <li>
-            <a href="#工具"><i class="fas fa-tools"></i> 工具</a>
-          </li>
-          <li>
-            <a href="#二次元"><i class="fas fa-heart"></i> 二次元</a>
-          </li>
-          <li>
-            <a href="#AI画图"><i class="fas fa-paint-brush"></i> AI画图</a>
-          </li>
+          <li><a href="#全部" class="active"><i class="fas fa-globe"></i> 全部</a></li>
+          <li><a href="#娱乐"><i class="fas fa-gamepad"></i> 娱乐</a></li>
+          <li><a href="#工具"><i class="fas fa-tools"></i> 工具</a></li>
+          <li><a href="#二次元"><i class="fas fa-heart"></i> 二次元</a></li>
+          <li><a href="#AI画图"><i class="fas fa-paint-brush"></i> AI画图</a></li>
         </ul>
       </aside>
 
@@ -230,46 +205,82 @@
       </main>
     </div>
 
-    <!-- 模态框 -->
-    <div class="modal" id="passwordModal">
-      <div class="modal-content">
-        <span class="close-btn">&times;</span>
-        <h3>请输入密码</h3>
-        <input type="password" id="passwordInput" placeholder="输入密码..." />
-        <button id="submitBtn" class="btn primary-btn">提交</button>
-      </div>
-    </div>
-
-    <div class="modal" id="loginModal">
-      <div class="modal-content">
-        <span class="close-btn">&times;</span>
-        <h3>管理员登录</h3>
-        <input type="text" id="username" placeholder="用户名" />
-        <input type="password" id="password" placeholder="密码" />
-        <button id="loginBtn" class="btn primary-btn">登录</button>
-      </div>
-    </div>
-
-    <div class="modal" id="adminModal">
-      <div class="modal-content admin-panel">
-        <span class="close-btn">&times;</span>
-        <button type="button" id="exitAdminBtn" class="btn secondary-btn" style="position:absolute; top:1rem; right:3rem;">退出管理</button>
-        <h3>网站管理</h3>
-
-        <div class="tabs">
-          <button class="tab-btn active" data-tab="add">添加网站</button>
-          <button class="tab-btn" data-tab="edit">编辑网站</button>
-          <button class="tab-btn" data-tab="remove">删除网站</button>
+    <!-- 访客密码门 (入口) -->
+    <div class="modal modal-overlay" id="passwordModal">
+      <div class="modal-card modal-card--gate">
+        <div class="gate-card">
+          <div class="gate-icon"><i class="fas fa-lock"></i></div>
+          <h2 class="gate-title">欢迎访问</h2>
+          <p class="gate-desc">请输入通行码以查看导航内容</p>
+          <form class="gate-form" id="passwordForm" onsubmit="return false;">
+            <input type="password" id="passwordInput" class="gate-input" placeholder="输入通行码" autocomplete="off" />
+            <button type="button" id="submitBtn" class="btn btn--primary btn--block gate-btn">进入</button>
+          </form>
+          <button type="button" class="gate-close close-btn" aria-label="关闭">&times;</button>
         </div>
+      </div>
+    </div>
 
-        <!-- 新增管理控制：顯示受限網站 & 特殊視覺開關 -->
-        <div class="admin-controls" style="margin:10px 0; display:flex; gap:12px; align-items:center;">
-          <button id="toggleWarnBtn" class="btn secondary-btn" type="button">顯示受限網站</button>
-          <label style="display:flex; align-items:center; gap:6px; margin-left:6px;">
-            <input type="checkbox" id="visualsToggle" />
-            <span>特殊封面 / 背景</span>
+    <!-- 设置 -->
+    <div class="modal modal-overlay" id="settingsModal">
+      <div class="modal-card">
+        <div class="modal-card__head">
+          <h3 class="modal-card__title"><i class="fas fa-cog"></i> 设置</h3>
+          <button type="button" class="close-btn modal-card__close" aria-label="关闭">&times;</button>
+        </div>
+        <div class="modal-card__body">
+          <div class="settings-item">
+            <span class="settings-label">显示受限网站</span>
+            <button id="toggleWarnBtn" class="btn btn--secondary btn--sm" type="button">顯示受限網站</button>
+          </div>
+          <label class="settings-item settings-item--toggle">
+            <span class="settings-label">特殊封面 / 背景</span>
+            <input type="checkbox" id="visualsToggle" class="toggle-input" />
+            <span class="toggle-slider"></span>
           </label>
         </div>
+      </div>
+    </div>
+
+    <!-- 管理员登录 -->
+    <div class="modal modal-overlay" id="loginModal">
+      <div class="modal-card modal-card--narrow">
+        <div class="modal-card__head">
+          <h3 class="modal-card__title"><i class="fas fa-user-shield"></i> 管理员登录</h3>
+          <button type="button" class="close-btn modal-card__close" aria-label="关闭">&times;</button>
+        </div>
+        <div class="modal-card__body">
+          <form id="loginForm" onsubmit="return false;">
+            <div class="form-group">
+              <label for="username">用户名</label>
+              <input type="text" id="username" placeholder="用户名" autocomplete="username" />
+            </div>
+            <div class="form-group">
+              <label for="password">密码</label>
+              <input type="password" id="password" placeholder="密码" autocomplete="current-password" />
+            </div>
+            <button type="button" id="loginBtn" class="btn btn--primary btn--block">登录</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- 网站管理 (管理员) -->
+    <div class="modal modal-overlay" id="adminModal">
+      <div class="modal-card modal-card--wide admin-panel">
+        <div class="modal-card__head admin-panel__head">
+          <h3 class="modal-card__title"><i class="fas fa-database"></i> 网站管理</h3>
+          <div class="admin-panel__actions">
+            <button type="button" id="exitAdminBtn" class="btn btn--ghost btn--sm">退出管理</button>
+            <button type="button" class="close-btn modal-card__close" aria-label="关闭">&times;</button>
+          </div>
+        </div>
+        <div class="modal-card__body admin-panel__body">
+          <div class="tabs">
+            <button type="button" class="tab-btn active" data-tab="add">添加</button>
+            <button type="button" class="tab-btn" data-tab="edit">编辑</button>
+            <button type="button" class="tab-btn" data-tab="remove">删除</button>
+          </div>
 
         <div class="tab-content" id="addTab">
           <form id="addSiteForm">
